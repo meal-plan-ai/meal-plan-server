@@ -6,6 +6,8 @@ export class MealPlanService {
   constructor(private openAiService: OpenAiService) {}
 
   async getMealPlan(): Promise<any> {
-    return await this.openAiService.sendData();
+    const testData = 'Say smth good for Oleksandr and Eugeniy.';
+
+    return await this.openAiService.sendData(testData);
   }
 }

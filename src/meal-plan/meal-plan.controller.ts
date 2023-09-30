@@ -7,8 +7,6 @@ export class MealPlanController {
 
   @Get('/create-plan')
   async createPlan(): Promise<any> {
-    const data = await this.mealPlanService.getMealPlan();
-
-    return data;
+    return await this.mealPlanService.getMealPlan();
   }
 }
