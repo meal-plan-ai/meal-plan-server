@@ -25,7 +25,7 @@ export const UserEntity = new EntitySchema<User>({
     nutritionPlan: {
       type: 'one-to-many',
       target: 'NutritionPlan',
-      inverseSide: '_user',
+      inverseSide: 'user',
       cascade: true,
     },
   },
