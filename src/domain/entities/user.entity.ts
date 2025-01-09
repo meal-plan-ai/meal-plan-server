@@ -7,20 +7,20 @@ export class User {
   private _name: string;
   private _email: string;
   private _password: string;
-  private _nutritionPlan: NutritionPlan[];
+  private _nutritionPlans: NutritionPlan[];
 
   constructor(
     id: UUID,
     name: string,
     email: string,
     password: string,
-    nutritionPlan: NutritionPlan[],
+    nutritionPlans: NutritionPlan[],
   ) {
     this._id = id;
     this._name = name;
     this._email = email;
     this._password = password;
-    this._nutritionPlan = nutritionPlan;
+    this._nutritionPlans = nutritionPlans;
   }
 
   public get id(): string {
@@ -53,17 +53,17 @@ export class User {
     return await bcrypt.compare(inputPassword, this._password);
   }
 
-  public set nutritionPlan(newNutritionPlan: NutritionPlan) {
-    const exists = this._nutritionPlan.some(
+  public set nutritionPlans(newNutritionPlan: NutritionPlan) {
+    const exists = this._nutritionPlans.some(
       (n) => n.id === newNutritionPlan.id,
     );
 
     if (!exists) {
-      this._nutritionPlan = [...this._nutritionPlan, newNutritionPlan];
+      this._nutritionPlans = [...this._nutritionPlans, newNutritionPlan];
     }
   }
 
-  public get nutritionPlan(): NutritionPlan[] {
-    return this._nutritionPlan;
+  public get nutritionPlans(): NutritionPlan[] {
+    return this._nutritionPlans;
   }
 }

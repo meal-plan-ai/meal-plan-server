@@ -6,7 +6,6 @@ import { IGenericRepository } from '../interfaces/repository.interface';
 import { GenericRepository } from './repository.implementation';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 import { EntityManager } from 'typeorm';
-import { MealPlan } from '~/domain/valueObjects';
 
 @Injectable()
 export class GenericDataService
@@ -14,7 +13,6 @@ export class GenericDataService
 {
   users: IGenericRepository<User>;
   nutritionPlans: IGenericRepository<NutritionPlan>;
-  mealPlans: IGenericRepository<MealPlan>;
 
   constructor(
     @InjectEntityManager() private readonly entityManager: EntityManager,
@@ -23,8 +21,6 @@ export class GenericDataService
     private readonly userRepository: IGenericRepository<User>,
     @InjectRepository(NutritionPlan)
     private readonly nutritionPlanRepository: IGenericRepository<NutritionPlan>,
-    @InjectRepository(MealPlan)
-    private readonly mealPlanRepository: IGenericRepository<MealPlan>,
   ) {}
 
   onApplicationBootstrap() {
@@ -37,11 +33,6 @@ export class GenericDataService
       NutritionPlan,
       this.entityManager,
       this.nutritionPlanRepository.queryRunner,
-    );
-    this.mealPlans = new GenericRepository<MealPlan>(
-      MealPlan,
-      this.entityManager,
-      this.mealPlanRepository.queryRunner,
     );
   }
 }

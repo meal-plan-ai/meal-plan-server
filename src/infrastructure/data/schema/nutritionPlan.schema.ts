@@ -1,17 +1,14 @@
 import { EntitySchema } from 'typeorm';
-import { NutritionPlan, MealPlan } from '~/domain';
+import { NutritionPlan } from '~/domain';
+import { MealPlan } from '~/domain/valueObjects';
 
 export const NutritionPlanEntity = new EntitySchema<NutritionPlan>({
-  name: 'NutritionPlans',
-  target: NutritionPlan,
+  name: 'nutritionPlans',
   columns: {
     id: {
       type: 'uuid',
       primary: true,
-      generated: 'uuid',
-    },
-    userId: {
-      type: 'uuid',
+      generated: true,
     },
     totalCalories: {
       type: 'int',
@@ -25,13 +22,10 @@ export const NutritionPlanEntity = new EntitySchema<NutritionPlan>({
     },
   },
   relations: {
-    userId: {
+    user: {
       type: 'many-to-one',
-      target: 'Users',
-      joinColumn: {
-        name: 'userId',
-      },
-      onDelete: 'CASCADE',
+      target: 'user',
+      joinColumn: true,
     },
   },
 });

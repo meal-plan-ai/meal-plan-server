@@ -2,13 +2,12 @@ import { EntitySchema } from 'typeorm';
 import { User } from '~/domain';
 
 export const UserEntity = new EntitySchema<User>({
-  name: 'Users',
-  target: User,
+  name: 'user',
   columns: {
     id: {
       type: 'uuid',
       primary: true,
-      generated: 'uuid',
+      generated: true,
     },
     name: {
       type: 'varchar',
@@ -22,11 +21,11 @@ export const UserEntity = new EntitySchema<User>({
     },
   },
   relations: {
-    nutritionPlan: {
+    nutritionPlans: {
       type: 'one-to-many',
-      target: 'NutritionPlan',
+      target: 'nutritionPlans',
       inverseSide: 'user',
-      cascade: true,
+      joinColumn: true,
     },
   },
 });

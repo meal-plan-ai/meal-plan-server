@@ -4,18 +4,18 @@ import { User } from './user.entity';
 
 export class NutritionPlan {
   private _id: UUID = randomUUID();
-  private _userId: string;
+  private _user: User;
   private _totalCalories: number;
   private _mealPlanData: MealPlan;
 
   constructor(
     id: UUID,
-    userId: string,
+    user: User,
     totalCalories: number,
     mealPlanData: MealPlan,
   ) {
     this._id = id;
-    this._userId = userId;
+    this._user = user;
     this._totalCalories = totalCalories;
     this._mealPlanData = mealPlanData;
   }
@@ -24,12 +24,12 @@ export class NutritionPlan {
     return this._id.toString();
   }
 
-  public set userId(user: User) {
-    this._userId = user.id;
+  public set user(user: User) {
+    this._user = user;
   }
 
-  public get userId(): string {
-    return this._userId.toString();
+  public get user(): User {
+    return this._user;
   }
 
   public set totalCalories(mealPlan: MealPlan) {
