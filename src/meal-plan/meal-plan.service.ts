@@ -3,11 +3,11 @@ import { OpenAiService } from '../integrations/open-ai/open-ai.service';
 
 @Injectable()
 export class MealPlanService {
-  constructor(private openAiService: OpenAiService) {}
+  constructor(private openAiService: OpenAiService) { }
 
   async getMealPlan(): Promise<any> {
     const testData = 'Say smth good for Oleksandr and Eugeniy.';
-
-    return await this.openAiService.sendData(testData);
+    return 'test'
+    // return await this.openAiService.sendData(testData);
   }
 }

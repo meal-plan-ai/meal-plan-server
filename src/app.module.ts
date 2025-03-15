@@ -4,6 +4,11 @@ import { ConfigModule } from '@nestjs/config';
 import { MealPlanModule } from './meal-plan/meal-plan.module';
 
 @Module({
-  imports: [ConfigModule.forRoot(), MealPlanModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    MealPlanModule,
+  ],
 })
-export class AppModule {}
+export class AppModule { }

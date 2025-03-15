@@ -17,7 +17,7 @@ export default tseslint.config(
         ...globals.node,
         ...globals.jest,
       },
-      ecmaVersion: 5,
+      ecmaVersion: 2021,
       sourceType: 'module',
       parserOptions: {
         projectService: true,
@@ -26,10 +26,15 @@ export default tseslint.config(
     },
   },
   {
+   {
     rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn'
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-unsafe-argument': 'error',
+      '@typescript-eslint/no-unsafe-call': 'off', // Disable unsafe call rule
+      '@typescript-eslint/no-unsafe-member-access': 'off', // Disable unsafe member access rule
+      'prettier/prettier': 'error',
     },
+  }
   },
 );
