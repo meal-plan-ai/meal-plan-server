@@ -1,17 +1,53 @@
-node.js version - 18.16.1
-npm version - 9.5.1
+# Meal Plan Server
+
+## Requirements
+- Node.js version - 22.14 (see package.json)
+- npm version - compatible with Node 22
+- Docker and Docker Compose
+
+## Setup and Installation
+
+### Basic Setup
+1. Install dependencies:
+   ```
+   npm i
+   ```
+2. Add OpenAI API key to `.env` file
+   ```
+   OPENAI_API_KEY=your-api-key
+   ```
+   You can get it from https://platform.openai.com/account/api-keys
+
+### Database Setup with Docker
+1. Start the PostgreSQL database:
+   ```
+   docker compose up -d
+   ```
+   This will run PostgreSQL in a Docker container accessible at `localhost:5432`
+
+2. Check if the container is running:
+   ```
+   docker ps
+   ```
+   You should see `meal-plan-postgres` in the list of running containers
+
+3. To view database logs:
+   ```
+   docker logs meal-plan-postgres
+   ```
+
+4. To connect to the database directly (optional):
+   ```
+   docker exec -it meal-plan-postgres psql -U postgres -d meal_plan
+   ```
+
+### Running the Application
+1. Start the development server:
+   ```
+   npm run start:dev
+   ```
+   The server will be available at http://localhost:3001/api
 
 
-Steps to run this project:
-1. npm i
-2. add open-ai api key to .env file (you can get it form https://platform.openai.com/account/api-keys)
-3. npm run start:dev
-
-
-
-How to send test request:
-1. install postman
-2. create test GET Request: http://localhost:3001/meal-plan/create-plan
-3. send request and check response
-
-note: you should change data you want send to open-ai in the src/meal-plan/meal-plan.service.ts file on the 9 line.
+## Notes
+- The database is configured in the `.env` file

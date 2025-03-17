@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { OpenAiService } from '../integrations/open-ai/open-ai.service';
+import { OpenAiService } from 'src/modules/integrations/open-ai/open-ai.service';
+
 
 @Injectable()
 export class MealPlanService {
