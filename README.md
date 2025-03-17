@@ -51,3 +51,24 @@
 
 ## Notes
 - The database is configured in the `.env` file
+
+## Conventional Commits
+
+In our project, we use [Conventional Commits](https://www.conventionalcommits.org/) for commit messages. This helps standardize commit history and simplifies the release process.
+
+### Examples
+
+- `feat(core): add new feature`
+- `fix(api): fix bug in data fetching method`
+
+### Commit Types
+
+- `feat`: Adding a new feature
+- `fix`: Fixing a bug
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting, missing semicolons, etc.)
+- `refactor`: Code changes that neither fix a bug nor add a feature
+- `test`: Adding or updating tests
+- `chore`: Changes to the build process or auxiliary tools
+
+
