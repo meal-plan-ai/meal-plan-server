@@ -1,12 +1,9 @@
 import {
   Controller,
   Get,
-  Post,
-  Put,
   Body,
   UseGuards,
   Req,
-  Param,
   NotFoundException,
   Inject,
   forwardRef,
@@ -30,7 +27,7 @@ interface RequestWithUser extends Request {
     id: string;
     userId: string;
     email: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 

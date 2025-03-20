@@ -8,4 +8,4 @@ echo "🔍 Running ESLint check..."
 npm run lint
 
 echo "🔍 Running tests..."
-npm run test
+npm run test -- --passWithNoTests

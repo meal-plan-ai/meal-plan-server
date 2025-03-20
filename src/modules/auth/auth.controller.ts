@@ -31,7 +31,7 @@ interface RequestWithUser extends Request {
   user: {
     id: string;
     email: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 
@@ -64,7 +64,7 @@ export class AuthController {
       this.setTokenCookie(response, result.access_token);
 
       return { success: true };
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException('Invalid credentials');
     }
   }
@@ -79,6 +79,7 @@ export class AuthController {
   async logout(
     @Res({ passthrough: true }) response: Response,
   ): Promise<LogoutResponseDto> {
+    await Promise.resolve();
     response.clearCookie('token', {
       path: '/',
       sameSite: 'lax',

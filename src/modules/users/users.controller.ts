@@ -2,7 +2,7 @@ import {
   Controller,
   Get,
   UseGuards,
-  Request,
+  Request as NestRequest,
   NotFoundException,
   ClassSerializerInterceptor,
   UseInterceptors,
@@ -16,6 +16,13 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
+
+interface RequestWithUser {
+  user: {
+    id: string;
+    email: string;
+  };
+}
 
 @ApiTags('users')
 @Controller('users')
@@ -34,7 +41,7 @@ export class UsersController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  async getCurrentUser(@Request() req): Promise<UserDto> {
+  async getCurrentUser(@NestRequest() req: RequestWithUser): Promise<UserDto> {
     try {
       const userId = req.user.id;
       return await this.usersService.findOne(userId);

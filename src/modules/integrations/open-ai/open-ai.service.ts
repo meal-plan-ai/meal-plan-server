@@ -4,7 +4,7 @@ import OpenAI from 'openai';
 
 @Injectable()
 export class OpenAiService {
-  private openai: any;
+  private openai: OpenAI;
 
   constructor(private configService: ConfigService) {
     const apiKey = this.configService.get<string>('OPENAI_API_KEY');
@@ -17,7 +17,9 @@ export class OpenAiService {
     this.openai = new OpenAI({ apiKey });
   }
 
-  async sendData(userMessage): Promise<any> {
+  async sendData(
+    userMessage: string,
+  ): Promise<OpenAI.Chat.Completions.ChatCompletion | null> {
     try {
       const response = await this.openai.chat.completions.create({
         messages: [{ role: 'user', content: userMessage }],

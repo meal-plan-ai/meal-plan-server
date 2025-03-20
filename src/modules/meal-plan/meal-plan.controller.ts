@@ -6,7 +6,7 @@ export class MealPlanController {
   constructor(private mealPlanService: MealPlanService) {}
 
   @Get('/create-plan')
-  async createPlan(): Promise<any> {
+  async createPlan(): Promise<string> {
     return await this.mealPlanService.getMealPlan();
   }
 }

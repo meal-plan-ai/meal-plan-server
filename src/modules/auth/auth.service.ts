@@ -8,11 +8,7 @@ import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { User } from '../users/entities/user.entity';
-import {
-  LoginRequestDto,
-  NewPasswordRequestDto,
-  RegisterRequestDto,
-} from './dto/auth.dto';
+import { LoginRequestDto, RegisterRequestDto } from './dto/auth.dto';
 import { ProfileService } from '../profile/profile.service';
 import { CreateProfileDto } from '../profile/dto/profile.dto';
 import { NewPasswordResponseDto } from './dto/auth.dto';
@@ -26,7 +22,7 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async validateUser(email: string, password: string): Promise<any> {
+  async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.usersService.findByEmail(email);
 
     if (user && (await bcrypt.compare(password, user.password))) {
@@ -94,7 +90,7 @@ export class AuthService {
     return { success: true };
   }
 
-  private generateToken(user: any) {
+  private generateToken(user: User) {
     const payload = { email: user.email, sub: user.id };
     return this.jwtService.sign(payload);
   }
