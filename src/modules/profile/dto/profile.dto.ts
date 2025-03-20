@@ -1,10 +1,17 @@
-import { IsEmail, IsString, IsOptional, IsUUID, IsBoolean, IsDate } from 'class-validator';
+import {
+  IsEmail,
+  IsString,
+  IsOptional,
+  IsUUID,
+  IsBoolean,
+  IsDate,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateProfileDto {
   @ApiProperty({
     description: 'Profile UUID',
-    example: '123e4567-e89b-12d3-a456-426614174000'
+    example: '123e4567-e89b-12d3-a456-426614174000',
   })
   @IsString()
   id: string;
@@ -12,7 +19,7 @@ export class UpdateProfileDto {
   @ApiProperty({
     description: 'User first name',
     example: 'John',
-    required: false
+    required: false,
   })
   @IsString()
   @IsOptional()
@@ -21,7 +28,7 @@ export class UpdateProfileDto {
   @ApiProperty({
     description: 'User last name',
     example: 'Doe',
-    required: false
+    required: false,
   })
   @IsString()
   @IsOptional()
@@ -32,7 +39,7 @@ export class CreateProfileDto {
   @ApiProperty({
     description: 'User first name',
     example: 'John',
-    required: false
+    required: false,
   })
   @IsString()
   @IsOptional()
@@ -41,7 +48,7 @@ export class CreateProfileDto {
   @ApiProperty({
     description: 'User last name',
     example: 'Doe',
-    required: false
+    required: false,
   })
   @IsString()
   @IsOptional()
@@ -51,7 +58,7 @@ export class CreateProfileDto {
 export class ProfileResponseDto {
   @ApiProperty({
     description: 'Profile UUID',
-    example: '123e4567-e89b-12d3-a456-426614174000'
+    example: '123e4567-e89b-12d3-a456-426614174000',
   })
   @IsUUID()
   id: string;
@@ -59,7 +66,7 @@ export class ProfileResponseDto {
   @ApiProperty({
     description: 'User first name',
     example: 'John',
-    required: false
+    required: false,
   })
   @IsString()
   @IsOptional()
@@ -68,7 +75,7 @@ export class ProfileResponseDto {
   @ApiProperty({
     description: 'User last name',
     example: 'Doe',
-    required: false
+    required: false,
   })
   @IsString()
   @IsOptional()
@@ -76,21 +83,21 @@ export class ProfileResponseDto {
 
   @ApiProperty({
     description: 'User UUID',
-    example: '123e4567-e89b-12d3-a456-426614174001'
+    example: '123e4567-e89b-12d3-a456-426614174001',
   })
   @IsUUID()
   userId: string;
 
   @ApiProperty({
     description: 'Creation timestamp',
-    example: '2023-01-01T00:00:00Z'
+    example: '2023-01-01T00:00:00Z',
   })
   @IsDate()
   createdAt: Date;
 
   @ApiProperty({
     description: 'Last update timestamp',
-    example: '2023-01-02T00:00:00Z'
+    example: '2023-01-02T00:00:00Z',
   })
   @IsDate()
   updatedAt: Date;
@@ -99,42 +106,42 @@ export class ProfileResponseDto {
 export class UserProfileResponseDto {
   @ApiProperty({
     description: 'User UUID',
-    example: '123e4567-e89b-12d3-a456-426614174001'
+    example: '123e4567-e89b-12d3-a456-426614174001',
   })
   @IsUUID()
   id: string;
 
   @ApiProperty({
     description: 'User email address',
-    example: 'user@example.com'
+    example: 'user@example.com',
   })
   @IsEmail()
   email: string;
 
   @ApiProperty({
     description: 'Email verification status',
-    example: true
+    example: true,
   })
   @IsBoolean()
   isEmailVerified: boolean;
 
   @ApiProperty({
     description: 'Creation timestamp',
-    example: '2023-01-01T00:00:00Z'
+    example: '2023-01-01T00:00:00Z',
   })
   @IsDate()
   createdAt: Date;
 
   @ApiProperty({
     description: 'Last update timestamp',
-    example: '2023-01-02T00:00:00Z'
+    example: '2023-01-02T00:00:00Z',
   })
   @IsDate()
   updatedAt: Date;
 
   @ApiProperty({
     description: 'User profile information',
-    type: ProfileResponseDto
+    type: ProfileResponseDto,
   })
   profile: ProfileResponseDto;
 }

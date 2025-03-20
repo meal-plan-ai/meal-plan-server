@@ -9,4 +9,4 @@ import { OpenAiService } from 'src/modules/integrations/open-ai/open-ai.service'
   controllers: [MealPlanController],
   providers: [MealPlanService, OpenAiService],
 })
-export class MealPlanModule { }
+export class MealPlanModule {}

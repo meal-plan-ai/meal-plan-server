@@ -19,4 +19,4 @@ import { ProfileModule } from './modules/profile/profile.module';
     MealPlanModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}

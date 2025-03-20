@@ -1,10 +1,18 @@
-import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  BadRequestException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { User } from '../users/entities/user.entity';
-import { LoginRequestDto, NewPasswordRequestDto, RegisterRequestDto } from './dto/auth.dto';
+import {
+  LoginRequestDto,
+  NewPasswordRequestDto,
+  RegisterRequestDto,
+} from './dto/auth.dto';
 import { ProfileService } from '../profile/profile.service';
 import { CreateProfileDto } from '../profile/dto/profile.dto';
 import { NewPasswordResponseDto } from './dto/auth.dto';
@@ -16,12 +24,12 @@ export class AuthService {
     private profileService: ProfileService,
     private jwtService: JwtService,
     private configService: ConfigService,
-  ) { }
+  ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
     const user = await this.usersService.findByEmail(email);
 
-    if (user && await bcrypt.compare(password, user.password)) {
+    if (user && (await bcrypt.compare(password, user.password))) {
       return user;
     }
 
@@ -52,9 +60,12 @@ export class AuthService {
 
     const profileData: CreateProfileDto = {
       firstName,
-      lastName
+      lastName,
     };
-    const profile = await this.profileService.createProfile(user.id, profileData);
+    const profile = await this.profileService.createProfile(
+      user.id,
+      profileData,
+    );
 
     await this.usersService.updateProfileId(user.id, profile.id);
 
@@ -64,9 +75,16 @@ export class AuthService {
     };
   }
 
-  async setNewPassword(userId: string, currentPassword: string, newPassword: string): Promise<NewPasswordResponseDto> {
+  async setNewPassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<NewPasswordResponseDto> {
     const user = await this.usersService.findOne(userId);
-    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password,
+    );
     if (!isPasswordValid) {
       throw new UnauthorizedException('Current password is incorrect');
     }

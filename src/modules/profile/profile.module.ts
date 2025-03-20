@@ -6,12 +6,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Profile } from './entities/profile.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Profile]),
-    forwardRef(() => UsersModule)
-  ],
+  imports: [TypeOrmModule.forFeature([Profile]), forwardRef(() => UsersModule)],
   controllers: [ProfileController],
   providers: [ProfileService],
   exports: [ProfileService],
 })
-export class ProfileModule { }
+export class ProfileModule {}
