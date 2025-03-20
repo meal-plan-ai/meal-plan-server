@@ -26,7 +26,6 @@ export default tseslint.config(
     },
   },
   {
-   {
     rules: {
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-floating-promises': 'error',
@@ -36,5 +35,4 @@ export default tseslint.config(
       'prettier/prettier': 'error',
     },
   }
-  },
 );

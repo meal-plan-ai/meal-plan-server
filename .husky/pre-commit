@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Checking Prettier formatting..."
+npx prettier --check "src/**/*.ts" "test/**/*.ts"
+
+echo "🔍 Running ESLint check..."
+npm run lint
+
+echo "🔍 Running tests..."
+npm run test
