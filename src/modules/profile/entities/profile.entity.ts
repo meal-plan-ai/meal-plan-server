@@ -1,20 +1,18 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { Exclude } from 'class-transformer';
 
-@Entity('users')
-export class User {
+@Entity('profiles')
+export class Profile {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 100, unique: true })
-  email: string;
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  firstName: string;
 
-  @Exclude()
-  @Column({ type: 'varchar', length: 100 })
-  password: string;
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  lastName: string;
 
   @Column({ nullable: true })
-  profileId: string;
+  userId: string;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -5,6 +5,7 @@ import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { MealPlanModule } from './modules/meal-plan/meal-plan.module';
+import { ProfileModule } from './modules/profile/profile.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { MealPlanModule } from './modules/meal-plan/meal-plan.module';
     DatabaseModule,
     UsersModule,
     AuthModule,
+    ProfileModule,
     MealPlanModule,
   ],
 })

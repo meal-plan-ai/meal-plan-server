@@ -1,12 +1,24 @@
-import { Controller, Post, Body, Get, UseGuards, Req, Res, BadRequestException } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto, ResetPasswordDto, NewPasswordDto, SocialLoginDto } from './dto/auth.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { Controller, Post, Body, Res, UnauthorizedException, UseGuards, Req } from '@nestjs/common';
+import { Response } from 'express';
+import { AuthService } from './auth.service';
+import {
+  LoginRequestDto,
+  RegisterRequestDto,
+  LoginResponseDto,
+  NewPasswordRequestDto,
+  NewPasswordResponseDto,
+  LogoutResponseDto,
+  RegisterResponseDto
+} from './dto/auth.dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 interface RequestWithUser extends Request {
-  user: any;
+  user: {
+    id: string;
+    email: string;
+    [key: string]: any;
+  };
 }
 
 @Controller('auth')
@@ -17,66 +29,49 @@ export class AuthController {
   ) { }
 
   @Post('login')
-  async login(@Body() loginDto: LoginDto, @Res({ passthrough: true }) response: Response) {
-    const result = await this.authService.login(loginDto);
-    console.log('Post(login), result: ', result);
-    this.setTokenCookie(response, result.access_token);
+  async login(@Body() loginDto: LoginRequestDto, @Res({ passthrough: true }) response: Response): Promise<LoginResponseDto> {
+    try {
+      const result = await this.authService.login(loginDto);
 
-    return { user: result.user };
-  }
+      this.setTokenCookie(response, result.access_token);
 
-  @Post('register')
-  async register(@Body() registerDto: RegisterDto, @Res({ passthrough: true }) response: Response) {
-    const result = await this.authService.register(registerDto);
-
-    this.setTokenCookie(response, result.access_token);
-
-    return { user: result.user };
-  }
-
-  @Post('google')
-  async googleLogin(@Body() socialLoginDto: SocialLoginDto, @Res({ passthrough: true }) response: Response) {
-    const result = await this.authService.googleLogin(socialLoginDto);
-
-    this.setTokenCookie(response, result.access_token);
-
-    return { user: result.user };
-  }
-
-  @Post('apple')
-  async appleLogin(@Body() socialLoginDto: SocialLoginDto, @Res({ passthrough: true }) response: Response) {
-    const result = await this.authService.appleLogin(socialLoginDto);
-
-    this.setTokenCookie(response, result.access_token);
-
-    return { user: result.user };
+      return { success: true };
+    } catch (error) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
   }
 
   @Post('logout')
-  async logout(@Res({ passthrough: true }) response: Response) {
+  async logout(@Res({ passthrough: true }) response: Response): Promise<LogoutResponseDto> {
     response.clearCookie('token', {
       path: '/',
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
     });
 
-    return { message: 'Logged out successfully' };
+    return { success: true };
+  }
+
+  @Post('register')
+  async register(@Body() registerDto: RegisterRequestDto, @Res({ passthrough: true }) response: Response): Promise<RegisterResponseDto> {
+    const result = await this.authService.register(registerDto);
+
+    this.setTokenCookie(response, result.access_token);
+
+    return { success: true };
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('me')
-  async getProfile(@Req() request: RequestWithUser) {
-    return request.user;
-  }
-
-  @Post('reset-password')
-  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
-    return this.authService.resetPassword(resetPasswordDto);
-  }
-
   @Post('new-password')
-  async setNewPassword(@Body() newPasswordDto: NewPasswordDto) {
-    return this.authService.setNewPassword(newPasswordDto);
+  async setNewPassword(
+    @Body() newPasswordDto: NewPasswordRequestDto,
+    @Req() request: RequestWithUser
+  ): Promise<NewPasswordResponseDto> {
+    return this.authService.setNewPassword(
+      request.user.id,
+      newPasswordDto.currentPassword,
+      newPasswordDto.password
+    );
   }
 
   private setTokenCookie(response: Response, token: string) {
@@ -90,4 +85,4 @@ export class AuthController {
       path: '/',
     });
   }
-} 
+}

@@ -28,44 +28,25 @@ export class UsersService {
     const user = new User();
 
     user.email = createUserDto.email;
-    user.firstName = createUserDto.firstName;
-    user.lastName = createUserDto.lastName;
 
-    // Hash password
     const salt = await bcrypt.genSalt();
     user.password = await bcrypt.hash(createUserDto.password, salt);
 
     return this.usersRepository.save(user);
   }
 
-  async updateResetPasswordToken(email: string, token: string, expires: Date): Promise<void> {
-    await this.usersRepository.update(
-      { email },
-      {
-        resetPasswordToken: token,
-        resetPasswordExpires: expires,
-      },
-    );
+  async updateProfileId(userId: string, profileId: string): Promise<User> {
+    const user = await this.findOne(userId);
+    user.profileId = profileId;
+    return this.usersRepository.save(user);
   }
 
-  async setNewPassword(token: string, newPassword: string): Promise<boolean> {
-    const user = await this.usersRepository.findOne({
-      where: {
-        resetPasswordToken: token,
-        resetPasswordExpires: new Date(Date.now()),
-      },
-    });
-
-    if (!user) {
-      return false;
-    }
+  async updatePassword(userId: string, newPassword: string): Promise<User> {
+    const user = await this.findOne(userId);
 
     const salt = await bcrypt.genSalt();
     user.password = await bcrypt.hash(newPassword, salt);
-    user.resetPasswordToken = null;
-    user.resetPasswordExpires = null;
 
-    await this.usersRepository.save(user);
-    return true;
+    return this.usersRepository.save(user);
   }
-} 
+}

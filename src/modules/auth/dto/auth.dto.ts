@@ -1,6 +1,6 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
 
-export class LoginDto {
+export class LoginRequestDto {
   @IsEmail()
   @IsNotEmpty()
   email: string;
@@ -11,7 +11,20 @@ export class LoginDto {
   password: string;
 }
 
-export class RegisterDto {
+export class LoginResponseDto {
+  @IsString()
+  @IsNotEmpty()
+  success: boolean
+}
+
+export class LogoutResponseDto {
+  @IsString()
+  @IsNotEmpty()
+  success: boolean
+}
+
+
+export class RegisterRequestDto {
   @IsEmail()
   @IsNotEmpty()
   email: string;
@@ -22,37 +35,34 @@ export class RegisterDto {
   password: string;
 
   @IsString()
-  @IsNotEmpty()
-  firstName: string;
+  @IsOptional()
+  firstName?: string;
 
   @IsString()
-  @IsNotEmpty()
-  lastName: string;
+  @IsOptional()
+  lastName?: string;
 }
 
-export class ResetPasswordDto {
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
-}
-
-export class NewPasswordDto {
+export class RegisterResponseDto {
   @IsString()
   @IsNotEmpty()
-  token: string;
+  success: boolean
+}
 
+export class NewPasswordRequestDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(6)
   password: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(6)
+  currentPassword: string;
 }
 
-export class SocialLoginDto {
+export class NewPasswordResponseDto {
   @IsString()
   @IsNotEmpty()
-  token: string;
-
-  @IsString()
-  @IsNotEmpty()
-  provider: string;
-} 
+  success: boolean
+}
