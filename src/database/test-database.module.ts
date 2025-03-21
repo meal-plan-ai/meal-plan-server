@@ -7,16 +7,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
+      useFactory: () => {
         // Get database URL from environment or fallback
         const dbUrl =
-          configService.get<string>('TEST_DATABASE_URL') ||
-          configService
-            .get<string>('DATABASE_URL')
-            ?.replace('meal_plan', 'meal_plan_test');
-
-        console.log(`Using test database URL: ${dbUrl}`);
-
+          'postgresql://postgres:postgres@localhost:5433/meal_plan_test';
         return {
           type: 'postgres',
           url: dbUrl,
