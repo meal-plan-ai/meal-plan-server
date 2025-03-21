@@ -14,7 +14,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  app.use(cookieParser(process.env.JWT_SECRET || 'your-secret-key'));
+  app.use(cookieParser(process.env.JWT_SECRET));
 
   app.useGlobalInterceptors(new LoggingInterceptor());
 

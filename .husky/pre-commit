@@ -7,5 +7,8 @@ npx prettier --check "src/**/*.ts" "test/**/*.ts"
 echo "🔍 Running ESLint check..."
 npm run lint
 
-echo "🔍 Running tests..."
-npm run test -- --passWithNoTests
+echo "🔍 Running unit tests..."
+npm run test
+
+echo "🔍 Running e2e tests..."
+npm run test:e2e:docker

@@ -33,5 +33,5 @@
          - name: Run E2E Tests with Database
            env:
              NODE_ENV: test
-             TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5433/meal_plan_test
+             DATABASE_URL: postgresql://postgres:postgres@localhost:5433/meal_plan_test
            run: bash ./scripts/run-e2e-tests.sh
