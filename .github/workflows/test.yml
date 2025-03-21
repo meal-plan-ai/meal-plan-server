@@ -1,0 +1,46 @@
+   name: Tests
+
+   on:
+     push:
+       branches: [ main, develop ]
+     pull_request:
+       branches: [ main, develop ]
+
+   jobs:
+     unit-tests:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v3
+         - name: Use Node.js
+           uses: actions/setup-node@v3
+           with:
+             node-version: '22.14'
+             cache: 'npm'
+         - run: npm ci
+         - run: npm run test
+
+     e2e-tests:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: actions/checkout@v3
+         - name: Use Node.js
+           uses: actions/setup-node@v3
+           with:
+             node-version: '22.14'
+             cache: 'npm'
+         - run: npm ci
+
+         - name: Start Database
+           run: npm run test:db:up
+
+         - name: Wait for Database to be ready
+           run: |
+             # Ждем 10 секунд, чтобы база данных успела инициализироваться
+             sleep 10
+
+         - name: Run E2E Tests
+           run: npm run test:e2e:ci
+
+         - name: Stop Database
+           if: always()
+           run: npm run test:db:down
