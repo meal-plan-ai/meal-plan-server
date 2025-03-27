@@ -6,6 +6,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { MealPlanModule } from './modules/meal-plan/meal-plan.module';
 import { ProfileModule } from './modules/profile/profile.module';
+import { MealCharacteristicModule } from './modules/meal-characteristic/meal-characteristic.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ProfileModule } from './modules/profile/profile.module';
     AuthModule,
     ProfileModule,
     MealPlanModule,
+    MealCharacteristicModule,
   ],
 })
 export class AppModule {}
