@@ -81,7 +81,6 @@ export class ProfileController {
     @Body() updateProfileDto: UpdateProfileDto,
   ): Promise<IProfile> {
     try {
-      console.log('Patch 1', updateProfileDto);
       return await this.profileService.updateProfile(updateProfileDto);
     } catch (error) {
       if (error instanceof NotFoundException) {
