@@ -29,9 +29,6 @@ export class MealCharacteristic {
   @Column({ type: 'varchar', length: 50, nullable: true })
   activityLevel: string;
 
-  @Column({ type: 'int', nullable: true })
-  activityCalories: number;
-
   @Column({ type: 'varchar', length: 50, nullable: true })
   goal: string;
 

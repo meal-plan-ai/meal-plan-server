@@ -99,17 +99,6 @@ export class CreateMealCharacteristicDto {
   activityLevel?: string;
 
   @ApiProperty({
-    description: 'Activity calories (manual input)',
-    example: 500,
-    required: false,
-  })
-  @IsInt()
-  @Min(0)
-  @Max(2000)
-  @IsOptional()
-  activityCalories?: number;
-
-  @ApiProperty({
     description: 'Goal of the diet plan',
     example: 'Weight Loss',
     enum: Goal,
@@ -328,15 +317,6 @@ export class MealCharacteristicResponseDto {
   @IsString()
   @IsOptional()
   activityLevel?: string;
-
-  @ApiProperty({
-    description: 'Activity calories (manual input)',
-    example: 500,
-    required: false,
-  })
-  @IsInt()
-  @IsOptional()
-  activityCalories?: number;
 
   @ApiProperty({
     description: 'Goal of the diet plan',
