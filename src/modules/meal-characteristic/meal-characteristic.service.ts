@@ -4,7 +4,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { MealCharacteristic } from './entities/meal-characteristic.entity';
 import {
   CreateMealCharacteristicDto,
@@ -84,8 +84,7 @@ export class MealCharacteristicService {
     return this.mealCharacteristicRepository.save(updatedMealCharacteristic);
   }
 
-  async remove(id: string): Promise<void> {
-    // Validate UUID format before querying database
+  async remove(id: string): Promise<DeleteResult['affected'] | undefined> {
     if (!isUUID(id)) {
       throw new NotFoundException(
         `Meal characteristic with ID ${id} not found`,
@@ -99,5 +98,7 @@ export class MealCharacteristicService {
         `Meal characteristic with ID ${id} not found`,
       );
     }
+
+    return result.affected;
   }
 }

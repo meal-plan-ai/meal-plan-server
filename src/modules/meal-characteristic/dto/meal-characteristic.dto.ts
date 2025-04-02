@@ -470,3 +470,25 @@ export class MealCharacteristicResponseDto {
   @IsDate()
   updatedAt: Date;
 }
+
+/**
+ * Response DTO for meal characteristics wrapped in base response structure
+ */
+export class MealCharacteristicBaseResponseDto {
+  @ApiProperty({
+    description: 'Meal characteristic data',
+    type: MealCharacteristicResponseDto,
+  })
+  data: MealCharacteristicResponseDto;
+}
+
+/**
+ * Response DTO for meal characteristics list wrapped in base response structure
+ */
+export class MealCharacteristicsBaseResponseDto {
+  @ApiProperty({
+    description: 'Array of meal characteristics',
+    type: [MealCharacteristicResponseDto],
+  })
+  data: MealCharacteristicResponseDto[];
+}
