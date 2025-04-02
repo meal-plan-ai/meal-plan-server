@@ -285,17 +285,429 @@
         ]
       }
     },
-    "/meal-plan/create-plan": {
+    "/meal-plans": {
+      "post": {
+        "operationId": "MealPlanController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMealPlanDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The meal plan has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MealPlanBaseResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data."
+          },
+          "401": {
+            "description": "Unauthorized."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new meal plan",
+        "tags": [
+          "meal-plans"
+        ]
+      },
       "get": {
-        "operationId": "MealPlanController_createPlan",
+        "operationId": "MealPlanController_findAll",
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Return all meal plans.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MealPlansBaseResponseDto"
+                }
+              }
+            }
           }
         },
+        "summary": "Get all meal plans",
         "tags": [
-          "MealPlan"
+          "meal-plans"
+        ]
+      }
+    },
+    "/meal-plans/user": {
+      "get": {
+        "operationId": "MealPlanController_findAllByUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return user meal plans.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MealPlansBaseResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get user meal plans",
+        "tags": [
+          "meal-plans"
+        ]
+      }
+    },
+    "/meal-plans/{id}": {
+      "get": {
+        "operationId": "MealPlanController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Meal plan ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return the meal plan with specified ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MealPlanBaseResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Meal plan not found."
+          }
+        },
+        "summary": "Get a meal plan by ID",
+        "tags": [
+          "meal-plans"
+        ]
+      },
+      "patch": {
+        "operationId": "MealPlanController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Meal plan ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMealPlanDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The meal plan has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MealPlanBaseResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "404": {
+            "description": "Meal plan not found."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a meal plan",
+        "tags": [
+          "meal-plans"
+        ]
+      },
+      "delete": {
+        "operationId": "MealPlanController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Meal plan ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The meal plan has been successfully deleted."
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "404": {
+            "description": "Meal plan not found."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete a meal plan",
+        "tags": [
+          "meal-plans"
+        ]
+      }
+    },
+    "/meal-characteristics": {
+      "post": {
+        "operationId": "MealCharacteristicController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMealCharacteristicDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The meal characteristic has been successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MealCharacteristicBaseResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data."
+          },
+          "401": {
+            "description": "Unauthorized."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Create a new meal characteristic",
+        "tags": [
+          "meal-characteristics"
+        ]
+      },
+      "get": {
+        "operationId": "MealCharacteristicController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return all meal characteristics.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MealCharacteristicsBaseResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get all meal characteristics",
+        "tags": [
+          "meal-characteristics"
+        ]
+      }
+    },
+    "/meal-characteristics/user": {
+      "get": {
+        "operationId": "MealCharacteristicController_findAllByUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Return user meal characteristics.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MealCharacteristicsBaseResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Get user meal characteristics",
+        "tags": [
+          "meal-characteristics"
+        ]
+      }
+    },
+    "/meal-characteristics/{id}": {
+      "get": {
+        "operationId": "MealCharacteristicController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Meal characteristic ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return the meal characteristic with specified ID.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MealCharacteristicBaseResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Meal characteristic not found."
+          }
+        },
+        "summary": "Get a meal characteristic by ID",
+        "tags": [
+          "meal-characteristics"
+        ]
+      },
+      "patch": {
+        "operationId": "MealCharacteristicController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Meal characteristic ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMealCharacteristicDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The meal characteristic has been successfully updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MealCharacteristicBaseResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "404": {
+            "description": "Meal characteristic not found."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Update a meal characteristic",
+        "tags": [
+          "meal-characteristics"
+        ]
+      },
+      "delete": {
+        "operationId": "MealCharacteristicController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Meal characteristic ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "The meal characteristic has been successfully deleted."
+          },
+          "401": {
+            "description": "Unauthorized."
+          },
+          "404": {
+            "description": "Meal characteristic not found."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Delete a meal characteristic",
+        "tags": [
+          "meal-characteristics"
         ]
       }
     }
@@ -535,6 +947,710 @@
         },
         "required": [
           "success"
+        ]
+      },
+      "CreateMealPlanDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the meal plan",
+            "example": "Weight Loss Plan"
+          },
+          "durationInDays": {
+            "type": "number",
+            "description": "Duration of the meal plan in days",
+            "example": 30
+          },
+          "mealCharacteristicId": {
+            "type": "string",
+            "description": "Meal characteristic UUID",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User UUID",
+            "example": "123e4567-e89b-12d3-a456-426614174001"
+          }
+        },
+        "required": [
+          "name",
+          "durationInDays"
+        ]
+      },
+      "MealPlanResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Meal plan UUID",
+            "example": "123e4567-e89b-12d3-a456-426614174002"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the meal plan",
+            "example": "Weight Loss Plan"
+          },
+          "durationInDays": {
+            "type": "number",
+            "description": "Duration of the meal plan in days",
+            "example": 30
+          },
+          "mealCharacteristicId": {
+            "type": "string",
+            "description": "Meal characteristic UUID",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "userId": {
+            "type": "string",
+            "description": "User UUID",
+            "example": "123e4567-e89b-12d3-a456-426614174001"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Creation timestamp",
+            "example": "2023-01-01T00:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Last update timestamp",
+            "example": "2023-01-02T00:00:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "durationInDays",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "MealPlanBaseResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Meal plan data",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MealPlanResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "MealPlansBaseResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Array of meal plans",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MealPlanResponseDto"
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateMealPlanDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Meal plan UUID",
+            "example": "123e4567-e89b-12d3-a456-426614174002"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the meal plan",
+            "example": "Modified Weight Loss Plan"
+          },
+          "durationInDays": {
+            "type": "number",
+            "description": "Duration of the meal plan in days",
+            "example": 45
+          },
+          "mealCharacteristicId": {
+            "type": "string",
+            "description": "Meal characteristic UUID",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "CreateMealCharacteristicDto": {
+        "type": "object",
+        "properties": {
+          "planName": {
+            "type": "string",
+            "description": "Name of the meal plan",
+            "example": "My Balanced Diet Plan"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Gender",
+            "example": "Male",
+            "enum": [
+              "Male",
+              "Female",
+              "Other"
+            ]
+          },
+          "age": {
+            "type": "number",
+            "description": "Age in years",
+            "example": 30
+          },
+          "height": {
+            "type": "number",
+            "description": "Height in centimeters",
+            "example": 175
+          },
+          "weight": {
+            "type": "number",
+            "description": "Weight in kilograms",
+            "example": 70
+          },
+          "activityLevel": {
+            "type": "string",
+            "description": "Activity level",
+            "example": "Moderate",
+            "enum": [
+              "Sedentary",
+              "Light",
+              "Moderate",
+              "Active",
+              "Very Active"
+            ]
+          },
+          "goal": {
+            "type": "string",
+            "description": "Goal of the diet plan",
+            "example": "Weight Loss",
+            "enum": [
+              "Maintenance",
+              "Weight Loss",
+              "Muscle Gain"
+            ]
+          },
+          "targetDailyCalories": {
+            "type": "number",
+            "description": "Target daily calorie intake",
+            "example": 2000
+          },
+          "proteinPercentage": {
+            "type": "number",
+            "description": "Protein percentage in macro ratio",
+            "example": 30
+          },
+          "fatPercentage": {
+            "type": "number",
+            "description": "Fat percentage in macro ratio",
+            "example": 30
+          },
+          "carbsPercentage": {
+            "type": "number",
+            "description": "Carbs percentage in macro ratio",
+            "example": 40
+          },
+          "includeSnacks": {
+            "type": "number",
+            "description": "Number of snacks to include",
+            "example": 2,
+            "default": 0
+          },
+          "mealsPerDay": {
+            "type": "number",
+            "description": "Number of meals per day",
+            "example": 3,
+            "default": 3
+          },
+          "medicalConditions": {
+            "description": "Medical conditions to consider",
+            "example": [
+              "Diabetes",
+              "Hypertension"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dietType": {
+            "description": "Diet types",
+            "example": [
+              "Vegetarian",
+              "Gluten-Free"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dietaryRestrictions": {
+            "description": "Dietary restrictions",
+            "example": [
+              "Lactose Intolerance",
+              "Nut Allergy"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "vitaminsAndMinerals": {
+            "description": "Vitamins and minerals to prioritize",
+            "example": [
+              "Vitamin C",
+              "Iron",
+              "Calcium"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "nutrientTargets": {
+            "type": "object",
+            "description": "Custom nutrient targets",
+            "example": {
+              "Vitamin D": 1000,
+              "Omega-3": 500
+            }
+          },
+          "cookingComplexity": {
+            "type": "string",
+            "description": "Cooking complexity preference",
+            "example": "Standard",
+            "enum": [
+              "Quick & Easy",
+              "Standard",
+              "Gourmet"
+            ]
+          },
+          "additionalPreferences": {
+            "description": "Additional preferences",
+            "example": [
+              "Organic",
+              "Local Products"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "planName",
+          "gender",
+          "includeSnacks",
+          "mealsPerDay"
+        ]
+      },
+      "MealCharacteristicResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Meal characteristic UUID",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "planName": {
+            "type": "string",
+            "description": "Name of the meal plan",
+            "example": "My Balanced Diet Plan"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Gender",
+            "example": "Male",
+            "enum": [
+              "Male",
+              "Female",
+              "Other"
+            ]
+          },
+          "age": {
+            "type": "number",
+            "description": "Age in years",
+            "example": 30
+          },
+          "height": {
+            "type": "number",
+            "description": "Height in centimeters",
+            "example": 175
+          },
+          "weight": {
+            "type": "number",
+            "description": "Weight in kilograms",
+            "example": 70
+          },
+          "activityLevel": {
+            "type": "string",
+            "description": "Activity level",
+            "example": "Moderate",
+            "enum": [
+              "Sedentary",
+              "Light",
+              "Moderate",
+              "Active",
+              "Very Active"
+            ]
+          },
+          "goal": {
+            "type": "string",
+            "description": "Goal of the diet plan",
+            "example": "Weight Loss",
+            "enum": [
+              "Maintenance",
+              "Weight Loss",
+              "Muscle Gain"
+            ]
+          },
+          "targetDailyCalories": {
+            "type": "number",
+            "description": "Target daily calorie intake",
+            "example": 2000
+          },
+          "proteinPercentage": {
+            "type": "number",
+            "description": "Protein percentage in macro ratio",
+            "example": 30
+          },
+          "fatPercentage": {
+            "type": "number",
+            "description": "Fat percentage in macro ratio",
+            "example": 30
+          },
+          "carbsPercentage": {
+            "type": "number",
+            "description": "Carbs percentage in macro ratio",
+            "example": 40
+          },
+          "includeSnacks": {
+            "type": "number",
+            "description": "Number of snacks to include",
+            "example": 2
+          },
+          "mealsPerDay": {
+            "type": "number",
+            "description": "Number of meals per day",
+            "example": 3
+          },
+          "medicalConditions": {
+            "description": "Medical conditions to consider",
+            "example": [
+              "Diabetes",
+              "Hypertension"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dietType": {
+            "description": "Diet types",
+            "example": [
+              "Vegetarian",
+              "Gluten-Free"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dietaryRestrictions": {
+            "description": "Dietary restrictions",
+            "example": [
+              "Lactose Intolerance",
+              "Nut Allergy"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "vitaminsAndMinerals": {
+            "description": "Vitamins and minerals to prioritize",
+            "example": [
+              "Vitamin C",
+              "Iron",
+              "Calcium"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "nutrientTargets": {
+            "type": "object",
+            "description": "Custom nutrient targets",
+            "example": {
+              "Vitamin D": 1000,
+              "Omega-3": 500
+            }
+          },
+          "cookingComplexity": {
+            "type": "string",
+            "description": "Cooking complexity preference",
+            "example": "Standard",
+            "enum": [
+              "Quick & Easy",
+              "Standard",
+              "Gourmet"
+            ]
+          },
+          "additionalPreferences": {
+            "description": "Additional preferences",
+            "example": [
+              "Organic",
+              "Local Products"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "userId": {
+            "type": "string",
+            "description": "User UUID",
+            "example": "123e4567-e89b-12d3-a456-426614174001"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Creation timestamp",
+            "example": "2023-01-01T00:00:00Z"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Last update timestamp",
+            "example": "2023-01-02T00:00:00Z"
+          }
+        },
+        "required": [
+          "id",
+          "planName",
+          "gender",
+          "includeSnacks",
+          "mealsPerDay",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "MealCharacteristicBaseResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Meal characteristic data",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MealCharacteristicResponseDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "MealCharacteristicsBaseResponseDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "description": "Array of meal characteristics",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MealCharacteristicResponseDto"
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateMealCharacteristicDto": {
+        "type": "object",
+        "properties": {
+          "planName": {
+            "type": "string",
+            "description": "Name of the meal plan",
+            "example": "My Balanced Diet Plan"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Gender",
+            "example": "Male",
+            "enum": [
+              "Male",
+              "Female",
+              "Other"
+            ]
+          },
+          "age": {
+            "type": "number",
+            "description": "Age in years",
+            "example": 30
+          },
+          "height": {
+            "type": "number",
+            "description": "Height in centimeters",
+            "example": 175
+          },
+          "weight": {
+            "type": "number",
+            "description": "Weight in kilograms",
+            "example": 70
+          },
+          "activityLevel": {
+            "type": "string",
+            "description": "Activity level",
+            "example": "Moderate",
+            "enum": [
+              "Sedentary",
+              "Light",
+              "Moderate",
+              "Active",
+              "Very Active"
+            ]
+          },
+          "goal": {
+            "type": "string",
+            "description": "Goal of the diet plan",
+            "example": "Weight Loss",
+            "enum": [
+              "Maintenance",
+              "Weight Loss",
+              "Muscle Gain"
+            ]
+          },
+          "targetDailyCalories": {
+            "type": "number",
+            "description": "Target daily calorie intake",
+            "example": 2000
+          },
+          "proteinPercentage": {
+            "type": "number",
+            "description": "Protein percentage in macro ratio",
+            "example": 30
+          },
+          "fatPercentage": {
+            "type": "number",
+            "description": "Fat percentage in macro ratio",
+            "example": 30
+          },
+          "carbsPercentage": {
+            "type": "number",
+            "description": "Carbs percentage in macro ratio",
+            "example": 40
+          },
+          "includeSnacks": {
+            "type": "number",
+            "description": "Number of snacks to include",
+            "example": 2,
+            "default": 0
+          },
+          "mealsPerDay": {
+            "type": "number",
+            "description": "Number of meals per day",
+            "example": 3,
+            "default": 3
+          },
+          "medicalConditions": {
+            "description": "Medical conditions to consider",
+            "example": [
+              "Diabetes",
+              "Hypertension"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dietType": {
+            "description": "Diet types",
+            "example": [
+              "Vegetarian",
+              "Gluten-Free"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dietaryRestrictions": {
+            "description": "Dietary restrictions",
+            "example": [
+              "Lactose Intolerance",
+              "Nut Allergy"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "vitaminsAndMinerals": {
+            "description": "Vitamins and minerals to prioritize",
+            "example": [
+              "Vitamin C",
+              "Iron",
+              "Calcium"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "nutrientTargets": {
+            "type": "object",
+            "description": "Custom nutrient targets",
+            "example": {
+              "Vitamin D": 1000,
+              "Omega-3": 500
+            }
+          },
+          "cookingComplexity": {
+            "type": "string",
+            "description": "Cooking complexity preference",
+            "example": "Standard",
+            "enum": [
+              "Quick & Easy",
+              "Standard",
+              "Gourmet"
+            ]
+          },
+          "additionalPreferences": {
+            "description": "Additional preferences",
+            "example": [
+              "Organic",
+              "Local Products"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "id": {
+            "type": "string",
+            "description": "Meal characteristic UUID",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          }
+        },
+        "required": [
+          "planName",
+          "gender",
+          "includeSnacks",
+          "mealsPerDay",
+          "id"
         ]
       }
     }
