@@ -100,9 +100,10 @@ describe('MealCharacteristicController (e2e)', () => {
         .send(createDto)
         .expect(201);
 
-      expect(response.body).toHaveProperty('id');
-      expect(response.body).toHaveProperty('planName', 'Test Diet Plan');
-      expect(response.body).toHaveProperty('userId', user.id);
+      expect(response.body).toHaveProperty('data');
+      expect(response.body.data).toHaveProperty('id');
+      expect(response.body.data).toHaveProperty('planName', 'Test Diet Plan');
+      expect(response.body.data).toHaveProperty('userId', user.id);
     });
 
     it('should return 401 if not authenticated', async () => {
@@ -127,9 +128,10 @@ describe('MealCharacteristicController (e2e)', () => {
         .get('/meal-characteristics')
         .expect(200);
 
-      expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body.length).toBeGreaterThan(0);
-      expect(response.body[0]).toHaveProperty('planName');
+      expect(response.body).toHaveProperty('data');
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data.length).toBeGreaterThan(0);
+      expect(response.body.data[0]).toHaveProperty('planName');
     });
   });
 
@@ -151,9 +153,10 @@ describe('MealCharacteristicController (e2e)', () => {
         .set('Cookie', `token=${authToken}`)
         .expect(200);
 
-      expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body.length).toBeGreaterThan(0);
-      expect(response.body[0]).toHaveProperty('userId', user.id);
+      expect(response.body).toHaveProperty('data');
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data.length).toBeGreaterThan(0);
+      expect(response.body.data[0]).toHaveProperty('userId', user.id);
     });
 
     it('should return 401 if not authenticated', async () => {
@@ -174,14 +177,15 @@ describe('MealCharacteristicController (e2e)', () => {
         .set('Cookie', `token=${authToken}`)
         .send(createDto);
 
-      const id = createResponse.body.id as string;
+      const id = createResponse.body.data.id as string;
 
       const response = await httpRequest
         .get(`/meal-characteristics/${id}`)
         .expect(200);
 
-      expect(response.body).toHaveProperty('id', id);
-      expect(response.body).toHaveProperty(
+      expect(response.body).toHaveProperty('data');
+      expect(response.body.data).toHaveProperty('id', id);
+      expect(response.body.data).toHaveProperty(
         'planName',
         'Diet Plan for GET test',
       );
@@ -207,7 +211,7 @@ describe('MealCharacteristicController (e2e)', () => {
         .set('Cookie', `token=${authToken}`)
         .send(createDto);
 
-      const id = createResponse.body.id as string;
+      const id = createResponse.body.data.id as string;
 
       const updateDto = {
         planName: 'Updated Diet Plan',
@@ -225,8 +229,12 @@ describe('MealCharacteristicController (e2e)', () => {
         .get(`/meal-characteristics/${id}`)
         .expect(200);
 
-      expect(response.body).toHaveProperty('planName', 'Updated Diet Plan');
-      expect(response.body).toHaveProperty('targetDailyCalories', 1800);
+      expect(response.body).toHaveProperty('data');
+      expect(response.body.data).toHaveProperty(
+        'planName',
+        'Updated Diet Plan',
+      );
+      expect(response.body.data).toHaveProperty('targetDailyCalories', 1800);
     });
 
     it('should return 401 if not authenticated', async () => {
@@ -258,7 +266,7 @@ describe('MealCharacteristicController (e2e)', () => {
         .set('Cookie', `token=${authToken}`)
         .send(createDto);
 
-      const id = createResponse.body.id as string;
+      const id = createResponse.body.data.id as string;
 
       // Delete it
       await httpRequest

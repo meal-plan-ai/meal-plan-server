@@ -12,6 +12,7 @@ import { MealCharacteristicModule } from './modules/meal-characteristic/meal-cha
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
     }),
     DatabaseModule,
     UsersModule,

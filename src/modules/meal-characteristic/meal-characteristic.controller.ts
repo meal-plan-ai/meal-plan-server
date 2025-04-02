@@ -14,7 +14,8 @@ import { MealCharacteristicService } from './meal-characteristic.service';
 import {
   CreateMealCharacteristicDto,
   UpdateMealCharacteristicDto,
-  MealCharacteristicResponseDto,
+  MealCharacteristicBaseResponseDto,
+  MealCharacteristicsBaseResponseDto,
 } from './dto/meal-characteristic.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { IMealCharacteristic } from './entities/meal-characteristic.interface';
@@ -25,6 +26,7 @@ import {
   ApiBearerAuth,
   ApiParam,
 } from '@nestjs/swagger';
+import { IBaseResponse } from '../../types/base-response.interface';
 
 interface RequestWithUser extends Request {
   user: {
@@ -46,7 +48,7 @@ export class MealCharacteristicController {
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'The meal characteristic has been successfully created.',
-    type: MealCharacteristicResponseDto,
+    type: MealCharacteristicBaseResponseDto,
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
@@ -62,30 +64,34 @@ export class MealCharacteristicController {
   async create(
     @Body() createMealCharacteristicDto: CreateMealCharacteristicDto,
     @Req() request: RequestWithUser,
-  ): Promise<IMealCharacteristic> {
+  ): Promise<IBaseResponse<IMealCharacteristic>> {
     const userId = request.user.userId || request.user.id;
-    return this.mealCharacteristicService.create(
+    const data = await this.mealCharacteristicService.create(
       createMealCharacteristicDto,
       userId,
     );
+
+    return { data };
   }
 
   @ApiOperation({ summary: 'Get all meal characteristics' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Return all meal characteristics.',
-    type: [MealCharacteristicResponseDto],
+    type: MealCharacteristicsBaseResponseDto,
   })
   @Get()
-  async findAll(): Promise<IMealCharacteristic[]> {
-    return this.mealCharacteristicService.findAll();
+  async findAll(): Promise<IBaseResponse<IMealCharacteristic[]>> {
+    const data = await this.mealCharacteristicService.findAll();
+
+    return { data };
   }
 
   @ApiOperation({ summary: 'Get user meal characteristics' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Return user meal characteristics.',
-    type: [MealCharacteristicResponseDto],
+    type: MealCharacteristicsBaseResponseDto,
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
@@ -96,16 +102,18 @@ export class MealCharacteristicController {
   @Get('user')
   async findAllByUser(
     @Req() request: RequestWithUser,
-  ): Promise<IMealCharacteristic[]> {
+  ): Promise<IBaseResponse<IMealCharacteristic[]>> {
     const userId = request.user.userId || request.user.id;
-    return this.mealCharacteristicService.findAllByUser(userId);
+    const data = await this.mealCharacteristicService.findAllByUser(userId);
+
+    return { data };
   }
 
   @ApiOperation({ summary: 'Get a meal characteristic by ID' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Return the meal characteristic with specified ID.',
-    type: MealCharacteristicResponseDto,
+    type: MealCharacteristicBaseResponseDto,
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
@@ -113,15 +121,19 @@ export class MealCharacteristicController {
   })
   @ApiParam({ name: 'id', description: 'Meal characteristic ID' })
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<IMealCharacteristic> {
-    return this.mealCharacteristicService.findOne(id);
+  async findOne(
+    @Param('id') id: string,
+  ): Promise<IBaseResponse<IMealCharacteristic>> {
+    const data = await this.mealCharacteristicService.findOne(id);
+
+    return { data };
   }
 
   @ApiOperation({ summary: 'Update a meal characteristic' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'The meal characteristic has been successfully updated.',
-    type: MealCharacteristicResponseDto,
+    type: MealCharacteristicBaseResponseDto,
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
@@ -138,10 +150,14 @@ export class MealCharacteristicController {
   async update(
     @Param('id') id: string,
     @Body() updateMealCharacteristicDto: UpdateMealCharacteristicDto,
-  ): Promise<IMealCharacteristic> {
+  ): Promise<IBaseResponse<IMealCharacteristic>> {
     // Ensure ID from URL is used
     updateMealCharacteristicDto.id = id;
-    return this.mealCharacteristicService.update(updateMealCharacteristicDto);
+    const data = await this.mealCharacteristicService.update(
+      updateMealCharacteristicDto,
+    );
+
+    return { data };
   }
 
   @ApiOperation({ summary: 'Delete a meal characteristic' })
@@ -161,7 +177,10 @@ export class MealCharacteristicController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async remove(@Param('id') id: string): Promise<void> {
-    return this.mealCharacteristicService.remove(id);
+  async remove(
+    @Param('id') id: string,
+  ): Promise<IBaseResponse<number | null | undefined>> {
+    const data = await this.mealCharacteristicService.remove(id);
+    return { data };
   }
 }

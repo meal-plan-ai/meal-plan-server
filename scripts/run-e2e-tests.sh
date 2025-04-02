@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# Ensure we're using the test environment
+export NODE_ENV=test
+echo "📊 Using test environment (NODE_ENV=$NODE_ENV)"
+
 echo "🚀 Starting test database..."
 npm run test:db:up
 

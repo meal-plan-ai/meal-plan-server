@@ -17,6 +17,9 @@ type EntityClassOrSchema =
  */
 export async function createTestingApp(): Promise<INestApplication> {
   try {
+    // Ensure we're using the test environment
+    process.env.NODE_ENV = 'test';
+
     const moduleFixture = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -25,6 +28,9 @@ export async function createTestingApp(): Promise<INestApplication> {
 
     const configService = app.get(ConfigService);
     const jwtSecret = configService.get<string>('JWT_SECRET');
+
+    // Log database connection to help diagnose issues
+    console.log(`Using database: ${configService.get<string>('DATABASE_URL')}`);
 
     app.use(cookieParser(jwtSecret));
 
