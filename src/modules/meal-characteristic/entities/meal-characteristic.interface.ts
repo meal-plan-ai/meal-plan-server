@@ -6,7 +6,6 @@ export interface IMealCharacteristic {
   height?: number;
   weight?: number;
   activityLevel?: string;
-  activityCalories?: number;
   goal?: string;
   targetDailyCalories?: number;
   proteinPercentage?: number;
