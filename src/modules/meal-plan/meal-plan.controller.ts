@@ -29,6 +29,7 @@ import {
 import { IBaseResponse } from '../../types/base-response.interface';
 import { Request } from 'express';
 import { AiMealGeneratorService } from '../ai-meal-generator/ai-meal-generator.service';
+import { AiGeneratedMealPlan } from '../ai-meal-generator/entities/ai-generated-meal-plan.entity';
 
 // Define an interface that extends Request to include the user property
 interface RequestWithUser extends Request {
@@ -200,12 +201,12 @@ export class MealPlanController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Post(':id/generate-ai-plan')
-  async generateAiPlan(@Param('id') id: string): Promise<IBaseResponse<any>> {
-    console.log('Generating AI plan for meal plan ID:', id);
+  async generateAiPlan(
+    @Param('id') id: string,
+  ): Promise<IBaseResponse<AiGeneratedMealPlan>> {
     try {
       const data = await this.mealPlanService.generateAiPlan(id);
-      console.log('AI plan generated successfully:', data);
-      return { data: { message: 'AI plan generated successfully' } };
+      return { data };
     } catch (error) {
       console.error('Failed to generate AI plan:', error.message);
       throw error;

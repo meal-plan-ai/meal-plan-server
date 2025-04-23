@@ -10,6 +10,7 @@ import { CreateMealPlanDto, UpdateMealPlanDto } from './dto/meal-plan.dto';
 import { IMealPlan } from './entities/meal-plan.interface';
 import { isUUID } from 'class-validator';
 import { AiMealGeneratorService } from '../ai-meal-generator/ai-meal-generator.service';
+import { AiGeneratedMealPlan } from '../ai-meal-generator/entities/ai-generated-meal-plan.entity';
 
 @Injectable()
 export class MealPlanService {
@@ -87,7 +88,7 @@ export class MealPlanService {
     return result.affected;
   }
 
-  async generateAiPlan(id: string): Promise<IMealPlan> {
+  async generateAiPlan(id: string): Promise<AiGeneratedMealPlan> {
     const plan = await this.mealPlanRepository.findOne({
       where: { id },
       relations: ['mealCharacteristic'],
@@ -99,8 +100,7 @@ export class MealPlanService {
 
     const generatedPlan =
       await this.aiMealGeneratorService.generateMealPlan(plan);
-    console.log('Generated AI plan result:', generatedPlan);
 
-    return plan;
+    return generatedPlan;
   }
 }

@@ -17,15 +17,15 @@ export class AiGeneratedMealPlan {
   @Column({ type: 'uuid' })
   mealPlanId: string;
 
+  @Column({ nullable: true })
+  userId: string;
+
   @ManyToOne(() => MealPlan, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'mealPlanId' })
   mealPlan: MealPlan;
 
   @Column({ type: 'json' })
   generatedPlan: object;
-
-  @Column({ nullable: true })
-  userId: string;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
   modelVersion: string;

@@ -5,6 +5,7 @@ import { MealCharacteristicModule } from '../meal-characteristic/meal-characteri
 import { AiGeneratedMealPlan } from './entities/ai-generated-meal-plan.entity';
 import { AiMealGeneratorService } from './ai-meal-generator.service';
 import { OpenAiModule } from '../integrations/open-ai/open-ai.module';
+import { MealPlan } from '../meal-plan/entities/meal-plan.entity';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { OpenAiModule } from '../integrations/open-ai/open-ai.module';
     forwardRef(() => MealPlanModule),
     MealCharacteristicModule,
     OpenAiModule,
+    TypeOrmModule.forFeature([MealPlan]),
   ],
   controllers: [],
   providers: [AiMealGeneratorService],

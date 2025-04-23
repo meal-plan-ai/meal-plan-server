@@ -8,6 +8,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { MealCharacteristic } from '../../meal-characteristic/entities/meal-characteristic.entity';
+import { AiGeneratedMealPlan } from '../../ai-meal-generator/entities/ai-generated-meal-plan.entity';
 
 @Entity('meal_plans')
 export class MealPlan {
@@ -26,6 +27,13 @@ export class MealPlan {
   @ManyToOne(() => MealCharacteristic, { eager: true })
   @JoinColumn({ name: 'mealCharacteristicId' })
   mealCharacteristic: MealCharacteristic;
+
+  @Column({ nullable: true })
+  aiGeneratedMealPlanId: string;
+
+  @ManyToOne(() => AiGeneratedMealPlan, { eager: true })
+  @JoinColumn({ name: 'aiGeneratedMealPlanId' })
+  aiGeneratedMealPlan: AiGeneratedMealPlan;
 
   @Column({ nullable: true })
   userId: string;
