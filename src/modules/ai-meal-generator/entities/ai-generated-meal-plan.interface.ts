@@ -38,3 +38,12 @@ export interface IAiIngredient {
   amount: number;
   unit: string; // e.g., "g", "ml", "tbsp"
 }
+
+export interface IAiGeneratedMealPlan {
+  id: string;
+  mealPlanId: string;
+  userId: string;
+  generatedPlan: IAiMealPlanResponse;
+  createdAt: Date;
+  updatedAt: Date;
+}
