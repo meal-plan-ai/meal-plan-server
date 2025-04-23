@@ -28,6 +28,7 @@ import {
 } from '@nestjs/swagger';
 import { IBaseResponse } from '../../types/base-response.interface';
 import { Request } from 'express';
+import { AiMealGeneratorService } from '../ai-meal-generator/ai-meal-generator.service';
 
 // Define an interface that extends Request to include the user property
 interface RequestWithUser extends Request {
@@ -42,7 +43,10 @@ interface RequestWithUser extends Request {
 @ApiTags('meal-plans')
 @Controller('meal-plans')
 export class MealPlanController {
-  constructor(private readonly mealPlanService: MealPlanService) {}
+  constructor(
+    private readonly mealPlanService: MealPlanService,
+    private readonly aiMealGeneratorService: AiMealGeneratorService,
+  ) {}
 
   @ApiOperation({ summary: 'Create a new meal plan' })
   @ApiResponse({
@@ -175,5 +179,36 @@ export class MealPlanController {
   ): Promise<IBaseResponse<number | null | undefined>> {
     const data = await this.mealPlanService.remove(id);
     return { data };
+  }
+
+  @ApiOperation({
+    summary: 'Generate an AI meal plan for an existing meal plan',
+  })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'The AI meal plan has been successfully generated.',
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Meal plan or meal characteristic not found.',
+  })
+  @ApiResponse({
+    status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Failed to generate AI meal plan.',
+  })
+  @ApiParam({ name: 'id', description: 'Meal plan ID' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/generate-ai-plan')
+  async generateAiPlan(@Param('id') id: string): Promise<IBaseResponse<any>> {
+    console.log('Generating AI plan for meal plan ID:', id);
+    try {
+      const data = await this.mealPlanService.generateAiPlan(id);
+      console.log('AI plan generated successfully:', data);
+      return { data: { message: 'AI plan generated successfully' } };
+    } catch (error) {
+      console.error('Failed to generate AI plan:', error.message);
+      throw error;
+    }
   }
 }

@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { MealPlan } from './entities/meal-plan.entity';
 import { NotFoundException, ConflictException } from '@nestjs/common';
 import { CreateMealPlanDto, UpdateMealPlanDto } from './dto/meal-plan.dto';
+import { AiMealGeneratorService } from '../ai-meal-generator/ai-meal-generator.service';
 
 describe('MealPlanService', () => {
   let service: MealPlanService;
@@ -15,6 +16,9 @@ describe('MealPlanService', () => {
     create: jest.Mock;
     merge: jest.Mock;
     delete: jest.Mock;
+  };
+  let aiMealGeneratorService: Partial<AiMealGeneratorService> & {
+    generateMealPlan: jest.Mock;
   };
 
   // Valid UUIDs for testing
@@ -43,12 +47,20 @@ describe('MealPlanService', () => {
       delete: jest.fn(),
     };
 
+    aiMealGeneratorService = {
+      generateMealPlan: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MealPlanService,
         {
           provide: getRepositoryToken(MealPlan),
           useValue: mealPlanRepository,
+        },
+        {
+          provide: AiMealGeneratorService,
+          useValue: aiMealGeneratorService,
         },
       ],
     }).compile();

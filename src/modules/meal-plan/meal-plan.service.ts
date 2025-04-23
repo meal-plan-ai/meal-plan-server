@@ -9,12 +9,14 @@ import { MealPlan } from './entities/meal-plan.entity';
 import { CreateMealPlanDto, UpdateMealPlanDto } from './dto/meal-plan.dto';
 import { IMealPlan } from './entities/meal-plan.interface';
 import { isUUID } from 'class-validator';
+import { AiMealGeneratorService } from '../ai-meal-generator/ai-meal-generator.service';
 
 @Injectable()
 export class MealPlanService {
   constructor(
     @InjectRepository(MealPlan)
     private mealPlanRepository: Repository<MealPlan>,
+    private aiMealGeneratorService: AiMealGeneratorService,
   ) {}
 
   async create(
@@ -83,5 +85,22 @@ export class MealPlanService {
     }
 
     return result.affected;
+  }
+
+  async generateAiPlan(id: string): Promise<IMealPlan> {
+    const plan = await this.mealPlanRepository.findOne({
+      where: { id },
+      relations: ['mealCharacteristic'],
+    });
+
+    if (!plan) {
+      throw new NotFoundException(`Meal plan with ID ${id} not found`);
+    }
+
+    const generatedPlan =
+      await this.aiMealGeneratorService.generateMealPlan(plan);
+    console.log('Generated AI plan result:', generatedPlan);
+
+    return plan;
   }
 }

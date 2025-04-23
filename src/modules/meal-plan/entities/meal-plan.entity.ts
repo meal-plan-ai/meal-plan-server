@@ -23,7 +23,7 @@ export class MealPlan {
   @Column({ nullable: true })
   mealCharacteristicId: string;
 
-  @ManyToOne(() => MealCharacteristic)
+  @ManyToOne(() => MealCharacteristic, { eager: true })
   @JoinColumn({ name: 'mealCharacteristicId' })
   mealCharacteristic: MealCharacteristic;
 

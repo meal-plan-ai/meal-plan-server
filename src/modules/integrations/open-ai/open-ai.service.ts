@@ -23,7 +23,7 @@ export class OpenAiService {
     try {
       const response = await this.openai.chat.completions.create({
         messages: [{ role: 'user', content: userMessage }],
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4.1-nano',
       });
 
       return response;
