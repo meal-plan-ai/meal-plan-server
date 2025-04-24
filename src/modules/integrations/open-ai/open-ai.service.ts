@@ -19,12 +19,21 @@ export class OpenAiService {
 
   async sendData(
     userMessage: string,
+    responseFormat?: 'json' | 'text',
   ): Promise<OpenAI.Chat.Completions.ChatCompletion | null> {
     try {
-      const response = await this.openai.chat.completions.create({
+      const options: OpenAI.Chat.Completions.ChatCompletionCreateParams = {
         messages: [{ role: 'user', content: userMessage }],
-        model: 'gpt-3.5-turbo',
-      });
+        model: 'gpt-4o',
+      };
+
+      if (responseFormat === 'json') {
+        options.response_format = { type: 'json_object' };
+      }
+
+      const response = await this.openai.chat.completions.create(options);
+
+      console.log('OpenAI response:', response);
 
       return response;
     } catch (error) {

@@ -7,6 +7,7 @@ import { UsersModule } from './modules/users/users.module';
 import { MealPlanModule } from './modules/meal-plan/meal-plan.module';
 import { ProfileModule } from './modules/profile/profile.module';
 import { MealCharacteristicModule } from './modules/meal-characteristic/meal-characteristic.module';
+import { AiMealGeneratorModule } from './modules/ai-meal-generator/ai-meal-generator.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { MealCharacteristicModule } from './modules/meal-characteristic/meal-cha
     ProfileModule,
     MealPlanModule,
     MealCharacteristicModule,
+    AiMealGeneratorModule,
   ],
 })
 export class AppModule {}

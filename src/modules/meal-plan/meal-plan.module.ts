@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { MealPlanController } from './meal-plan.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { MealPlanService } from './meal-plan.service';
-import { OpenAiService } from '../integrations/open-ai/open-ai.service';
+import { MealPlanController } from './meal-plan.controller';
+import { MealPlan } from './entities/meal-plan.entity';
+import { AiMealGeneratorModule } from '../ai-meal-generator/ai-meal-generator.module';
 
 @Module({
-  imports: [ConfigModule],
+  imports: [TypeOrmModule.forFeature([MealPlan]), AiMealGeneratorModule],
   controllers: [MealPlanController],
-  providers: [MealPlanService, OpenAiService],
+  providers: [MealPlanService],
+  exports: [MealPlanService],
 })
 export class MealPlanModule {}
