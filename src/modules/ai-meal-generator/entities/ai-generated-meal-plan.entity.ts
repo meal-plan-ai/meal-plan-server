@@ -4,10 +4,8 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
-  JoinColumn,
 } from 'typeorm';
-import { MealPlan } from '../../meal-plan/entities/meal-plan.entity';
+import { IAiMealPlanResponse } from './ai-generated-meal-plan.interface';
 
 @Entity('ai_generated_meal_plans')
 export class AiGeneratedMealPlan {
@@ -17,15 +15,8 @@ export class AiGeneratedMealPlan {
   @Column({ type: 'uuid' })
   mealPlanId: string;
 
-  @Column({ nullable: true })
-  userId: string;
-
-  @ManyToOne(() => MealPlan, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'mealPlanId' })
-  mealPlan: MealPlan;
-
   @Column({ type: 'json' })
-  generatedPlan: object;
+  generatedPlan: IAiMealPlanResponse;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
   modelVersion: string;

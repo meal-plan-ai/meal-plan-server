@@ -4,7 +4,7 @@ export interface IAiMealPlanResponse {
 
 export interface IAiDayPlan {
   dayNumber: number;
-  date?: string; // Optional ISO date string
+  date?: string;
   totalNutrition: {
     calories: number;
     protein: number;
@@ -14,8 +14,15 @@ export interface IAiDayPlan {
   meals: IAiMeal[];
 }
 
+export enum EMealType {
+  BREAKFAST = 'breakfast',
+  LUNCH = 'lunch',
+  DINNER = 'dinner',
+  SNACK = 'snack',
+}
+
 export interface IAiMeal {
-  mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack';
+  mealType: EMealType;
   name: string;
   description: string;
   nutrition: {
@@ -27,23 +34,23 @@ export interface IAiMeal {
   recipe: {
     ingredients: IAiIngredient[];
     instructions: string[];
-    preparationTime: number; // minutes
-    cookingTime: number; // minutes
+    preparationTime: number;
+    cookingTime: number;
   };
-  tags: string[]; // e.g., "vegetarian", "high-protein", "low-carb"
+  tags: string[];
 }
 
 export interface IAiIngredient {
   name: string;
   amount: number;
-  unit: string; // e.g., "g", "ml", "tbsp"
+  unit: string;
 }
 
 export interface IAiGeneratedMealPlan {
   id: string;
   mealPlanId: string;
-  userId: string;
   generatedPlan: IAiMealPlanResponse;
+  modelVersion: string;
   createdAt: Date;
   updatedAt: Date;
 }

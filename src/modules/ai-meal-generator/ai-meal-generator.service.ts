@@ -142,7 +142,6 @@ export class AiMealGeneratorService {
     aiGeneratedMealPlan.mealPlanId = mealPlanId;
     aiGeneratedMealPlan.generatedPlan = generatedPlan;
     aiGeneratedMealPlan.modelVersion = '';
-    aiGeneratedMealPlan.userId = '';
 
     const plan =
       await this.aiGeneratedMealPlanRepository.save(aiGeneratedMealPlan);
