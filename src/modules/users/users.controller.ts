@@ -19,7 +19,7 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 
-interface RequestWithUser {
+export interface RequestWithUser {
   user: {
     id: string;
     email: string;

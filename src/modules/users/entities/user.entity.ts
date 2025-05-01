@@ -22,6 +22,9 @@ export class User {
   @Column({ nullable: true })
   profileId: string;
 
+  @Column({ nullable: true })
+  stripeCustomerId: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
