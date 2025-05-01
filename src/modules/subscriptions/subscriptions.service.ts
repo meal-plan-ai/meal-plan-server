@@ -27,6 +27,7 @@ import { CreatePaymentDto } from './dto/create-payment.dto';
 import { PurchaseSubscriptionDto } from './dto/purchase-subscription.dto';
 import { StripeService } from '../stripe/providers/stripe.service';
 import { UsersService } from '../users/users.service';
+import Stripe from 'stripe';
 
 @Injectable()
 export class SubscriptionsService {
@@ -218,7 +219,7 @@ export class SubscriptionsService {
           subscriptionId: subscription.id,
           planId: plan.id,
           ...purchaseDto.metadata,
-        },
+        } as Stripe.MetadataParam,
       );
 
       const payment = await this.createPayment({

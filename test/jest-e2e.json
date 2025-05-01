@@ -6,5 +6,6 @@
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "modulePaths": ["<rootDir>"]
+  "modulePaths": ["<rootDir>"],
+  "setupFiles": ["<rootDir>/test/jest-e2e.setup.js"]
 }
