@@ -169,6 +169,53 @@ export class StripeService {
     }
   }
 
+  async createSetupIntent() {
+    try {
+      const setupIntent = await this.stripe.setupIntents.create({
+        payment_method_types: ['card'],
+      });
+
+      return {
+        clientSecret: setupIntent.client_secret,
+        setupIntentId: setupIntent.id,
+      };
+    } catch (error) {
+      this.logger.error(`Error creating setup intent: ${error.message}`);
+      throw new InternalServerErrorException(
+        `Failed to create setup intent: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
+  async createCheckoutSession() {
+    try {
+      // Создаем PaymentIntent для тестовой оплаты
+      const paymentIntent = await this.stripe.paymentIntents.create({
+        amount: 1999, // $19.99
+        currency: 'usd',
+        automatic_payment_methods: {
+          enabled: true,
+        },
+        metadata: {
+          integration_check: 'accept_a_payment',
+        },
+        description: 'Test payment for development',
+      });
+
+      this.logger.log(`Created payment intent: ${paymentIntent.id}`);
+
+      return {
+        clientSecret: paymentIntent.client_secret,
+        paymentIntentId: paymentIntent.id,
+      };
+    } catch (error) {
+      this.logger.error(`Error creating payment intent: ${error.message}`);
+      throw new InternalServerErrorException(
+        `Failed to create payment intent: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+
   constructWebhookEvent(
     payload: Buffer,
     signature: string,
