@@ -72,7 +72,7 @@ export class AiMealGeneratorService {
 
   private createOpenAiPrompt(requestData: {
     days: number;
-    planCharacteristic: any;
+    planCharacteristic: unknown;
   }): string {
     return `
       Generate a detailed meal plan for ${requestData.days} day(s) based on the following characteristics:

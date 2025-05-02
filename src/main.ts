@@ -4,9 +4,12 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { LoggingInterceptor } from './interceptors/logging.interceptors';
+import { json } from 'express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    rawBody: true,
+  });
   const port = process.env.PORT || 3001;
 
   app.enableCors({
@@ -15,6 +18,18 @@ async function bootstrap() {
   });
 
   app.use(cookieParser(process.env.JWT_SECRET));
+
+  app.use(
+    json({
+      limit: '10mb',
+      verify: (req: any, res, buffer) => {
+        if (req.originalUrl.includes('/webhooks/stripe')) {
+          req.rawBody = buffer;
+        }
+        return true;
+      },
+    }),
+  );
 
   app.useGlobalInterceptors(new LoggingInterceptor());
 
