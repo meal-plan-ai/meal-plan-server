@@ -15,6 +15,10 @@ export enum SubscriptionStatus {
   CANCELLED = 'cancelled',
   EXPIRED = 'expired',
   TRIAL = 'trial',
+  PENDING = 'pending',
+  PAST_DUE = 'past_due',
+  UNPAID = 'unpaid',
+  INCOMPLETE = 'incomplete',
 }
 
 @Entity('subscriptions')
