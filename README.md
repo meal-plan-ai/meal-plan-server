@@ -23,7 +23,7 @@
    ```
    docker compose up -d
    ```
-   This will run PostgreSQL in a Docker container accessible at `localhost:5432`
+   This will run PostgreSQL in a Docker container accessible at `localhost:5499`
 
 2. Check if the container is running:
    ```
@@ -70,5 +70,3 @@ In our project, we use [Conventional Commits](https://www.conventionalcommits.or
 - `refactor`: Code changes that neither fix a bug nor add a feature
 - `test`: Adding or updating tests
 - `chore`: Changes to the build process or auxiliary tools
-
-

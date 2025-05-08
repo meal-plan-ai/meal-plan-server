@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Logger } from '@nestjs/common';
 import {
   Subscription,
   SubscriptionStatus,
@@ -31,6 +32,8 @@ import Stripe from 'stripe';
 
 @Injectable()
 export class SubscriptionsService {
+  private readonly logger = new Logger(SubscriptionsService.name);
+
   constructor(
     @InjectRepository(Subscription)
     private subscriptionRepository: Repository<Subscription>,
@@ -71,6 +74,10 @@ export class SubscriptionsService {
     createDto: CreateSubscriptionDto,
   ): Promise<Subscription> {
     const plan = await this.findPlanById(createDto.planId);
+    this.logger.log(
+      `CreateSubscription createDto: ${JSON.stringify(createDto)}`,
+    );
+
     const newSubscription = this.subscriptionRepository.create({
       userId: createDto.userId,
       planId: plan.id,
@@ -104,6 +111,21 @@ export class SubscriptionsService {
     });
     if (!subscription) {
       throw new NotFoundException(`Subscription with ID ${id} not found`);
+    }
+
+    if (subscription.externalSubscriptionId) {
+      try {
+        await this.stripeService.cancelSubscription(
+          subscription.externalSubscriptionId,
+        );
+        this.logger.log(
+          `Cancelled Stripe subscription ${subscription.externalSubscriptionId}`,
+        );
+      } catch (error) {
+        this.logger.error(
+          `Error cancelling Stripe subscription: ${error.message}`,
+        );
+      }
     }
 
     subscription.status = SubscriptionStatus.CANCELLED;
@@ -151,6 +173,7 @@ export class SubscriptionsService {
   }
 
   async createPayment(createDto: CreatePaymentDto): Promise<Payment> {
+    this.logger.log(`CreatePayment createDto: ${JSON.stringify(createDto)}`);
     const newPayment = this.paymentRepository.create({
       userId: createDto.userId,
       subscriptionId: createDto.subscriptionId,
@@ -263,5 +286,134 @@ export class SubscriptionsService {
         `Subscription purchase failed: ${errorMessage}`,
       );
     }
+  }
+
+  async createStripeSubscription(
+    userId: string,
+    purchaseDto: PurchaseSubscriptionDto,
+  ): Promise<{ subscription: Subscription; payment: Payment }> {
+    try {
+      this.logger.log(
+        `Creating Stripe subscription for user ${userId} with plan ${purchaseDto.planId}`,
+      );
+      const plan = await this.findPlanById(purchaseDto.planId);
+      const user = await this.usersService.findOne(userId);
+
+      const startDate = new Date();
+      const endDate = new Date(startDate);
+
+      if (plan.interval === PlanInterval.MONTHLY) {
+        endDate.setMonth(endDate.getMonth() + 1);
+      } else if (plan.interval === PlanInterval.ANNUALLY) {
+        endDate.setFullYear(endDate.getFullYear() + 1);
+      } else {
+        endDate.setMonth(endDate.getMonth() + 1); // По умолчанию месяц
+      }
+
+      // Создаем запись подписки с временным статусом PENDING
+      const subscription = await this.createSubscription({
+        userId,
+        planId: plan.id,
+        status: SubscriptionStatus.PENDING,
+        startDate,
+        endDate,
+        autoRenew: purchaseDto.autoRenew || false,
+      });
+
+      // Получаем или создаем Stripe Customer ID
+      let stripeCustomerId = '';
+
+      if (user.stripeCustomerId) {
+        stripeCustomerId = String(user.stripeCustomerId);
+      } else {
+        const customerId = await this.stripeService.createCustomer(user);
+        await this.usersService.update(user.id, {
+          stripeCustomerId: customerId,
+        });
+        stripeCustomerId = customerId;
+      }
+
+      // Создаем Stripe Product и Price, если еще не созданы
+      let stripePriceId = plan.externalPlanId;
+
+      if (!stripePriceId) {
+        // Создаем продукт в Stripe
+        const productResponse = await this.stripeService.createProduct(
+          plan.name,
+          plan.description,
+          { planId: plan.id },
+        );
+
+        // Создаем цену для этого продукта
+        const interval =
+          plan.interval === PlanInterval.ANNUALLY ? 'year' : 'month';
+        const priceResponse = await this.stripeService.createPrice(
+          productResponse.productId,
+          plan.price,
+          purchaseDto.currency || 'USD',
+          interval,
+        );
+
+        stripePriceId = priceResponse.priceId;
+
+        // Сохраняем ID цены Stripe в нашей базе данных
+        await this.planRepository.update(plan.id, {
+          externalPlanId: stripePriceId,
+        });
+      }
+
+      // Создаем подписку в Stripe с автоматическим продлением
+      const stripeSubscription = await this.stripeService.createSubscription(
+        stripeCustomerId,
+        stripePriceId,
+        plan.trialDays || 0,
+      );
+
+      // Обновляем нашу подписку с ID из Stripe
+      await this.updateSubscription(subscription.id, {
+        externalSubscriptionId: stripeSubscription.subscriptionId,
+        status: SubscriptionStatus.ACTIVE,
+      });
+
+      // Создаем запись о платеже
+      const payment = await this.createPayment({
+        userId,
+        subscriptionId: subscription.id,
+        amount: plan.price,
+        currency: purchaseDto.currency || 'USD',
+        status: PaymentStatus.COMPLETED,
+        provider: PaymentProvider.STRIPE,
+        externalPaymentId: stripeSubscription.subscriptionId,
+        metadata: {
+          stripeCustomerId,
+          stripeSubscriptionId: stripeSubscription.subscriptionId,
+        },
+      });
+
+      // Обновляем объект подписки с актуальным статусом для возврата
+      subscription.status = SubscriptionStatus.ACTIVE;
+      subscription.externalSubscriptionId = stripeSubscription.subscriptionId;
+
+      return { subscription, payment };
+    } catch (error) {
+      this.logger.error(
+        `Failed to create Stripe subscription: ${error.message}`,
+      );
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        `Failed to create Stripe subscription: ${error.message}`,
+      );
+    }
+  }
+
+  async findByExternalId(externalId: string): Promise<Subscription | null> {
+    return this.subscriptionRepository.findOne({
+      where: { externalSubscriptionId: externalId },
+    });
   }
 }

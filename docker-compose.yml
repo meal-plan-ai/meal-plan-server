@@ -3,7 +3,7 @@ services:
     image: postgres:16
     container_name: meal-plan-postgres
     ports:
-      - "5432:5432"
+      - "5499:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres

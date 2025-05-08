@@ -7,52 +7,36 @@ export const STRIPE_CLIENT = 'STRIPE_CLIENT';
 // Mock Stripe client for testing
 const mockStripeClient = {
   customers: {
-    create: jest
-      .fn()
-      .mockImplementation(() => Promise.resolve({ id: 'mock_customer_id' })),
+    create: () => Promise.resolve({ id: 'mock_customer_id' }),
   },
   products: {
-    create: jest
-      .fn()
-      .mockImplementation(() => Promise.resolve({ id: 'mock_product_id' })),
+    create: () => Promise.resolve({ id: 'mock_product_id' }),
   },
   prices: {
-    create: jest
-      .fn()
-      .mockImplementation(() => Promise.resolve({ id: 'mock_price_id' })),
+    create: () => Promise.resolve({ id: 'mock_price_id' }),
   },
   subscriptions: {
-    create: jest.fn().mockImplementation(() =>
+    create: () =>
       Promise.resolve({
         id: 'mock_subscription_id',
         status: 'active',
         current_period_end: Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60, // 30 days from now
       }),
-    ),
-    cancel: jest
-      .fn()
-      .mockImplementation(() =>
-        Promise.resolve({ id: 'mock_subscription_id', status: 'canceled' }),
-      ),
-    update: jest
-      .fn()
-      .mockImplementation(() =>
-        Promise.resolve({ id: 'mock_subscription_id', status: 'active' }),
-      ),
+    cancel: () =>
+      Promise.resolve({ id: 'mock_subscription_id', status: 'canceled' }),
+    update: () =>
+      Promise.resolve({ id: 'mock_subscription_id', status: 'active' }),
   },
   paymentIntents: {
-    create: jest.fn().mockImplementation(() =>
+    create: () =>
       Promise.resolve({
         id: 'mock_payment_intent_id',
         client_secret: 'mock_client_secret',
         status: 'requires_payment_method',
       }),
-    ),
   },
   webhooks: {
-    constructEvent: jest
-      .fn()
-      .mockImplementation(() => ({ type: 'mock.event', data: { object: {} } })),
+    constructEvent: () => ({ type: 'mock.event', data: { object: {} } }),
   },
 };
 

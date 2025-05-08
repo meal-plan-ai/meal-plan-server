@@ -157,6 +157,27 @@ export class SubscriptionsController {
       purchaseDto,
     );
   }
+
+  @Post('purchase-subscription')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Purchase a subscription with automatic renewal through Stripe',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Subscription with auto-renewal purchased successfully',
+  })
+  async purchaseStripeSubscription(
+    @Request() req: RequestWithUser,
+    @Body() purchaseDto: PurchaseSubscriptionDto,
+  ): Promise<{ subscription: Subscription; payment: Payment }> {
+    return this.subscriptionsService.createStripeSubscription(
+      req.user.id,
+      purchaseDto,
+    );
+  }
+
   @Get('plans')
   @ApiOperation({ summary: 'Get all subscription plans' })
   @ApiResponse({ status: 200, description: 'Returns all subscription plans' })
