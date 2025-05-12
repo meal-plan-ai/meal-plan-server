@@ -1,5 +1,4 @@
 import { Provider } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
 
 export const STRIPE_CLIENT = 'STRIPE_CLIENT';
@@ -58,15 +57,15 @@ export const STRIPE_CLIENT = 'STRIPE_CLIENT';
 
 export const StripeProvider: Provider = {
   provide: STRIPE_CLIENT,
-  useFactory: (configService: ConfigService) => {
+  useFactory: () => {
     // If we're in a test environment and the TEST_USE_MOCK_STRIPE flag is set, use the mock
     if (process.env.NODE_ENV === 'test') {
       console.log('Using mock Stripe client for tests');
       // return mockStripeClient;
     }
 
-    const apiKey = configService.get<string>('STRIPE_SK_TEST');
-
+    const apiKey = process.env.NEXT_PUBLIC_STRIPE_SK_TEST;
+    console.log('apiKey111', apiKey);
     if (!apiKey) {
       throw new Error('STRIPE_SK_TEST environment variable not set');
     }
@@ -75,5 +74,5 @@ export const StripeProvider: Provider = {
       apiVersion: '2023-10-16' as Stripe.LatestApiVersion,
     });
   },
-  inject: [ConfigService],
+  inject: [],
 };
