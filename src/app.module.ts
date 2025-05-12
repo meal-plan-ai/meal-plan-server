@@ -10,6 +10,7 @@ import { MealCharacteristicModule } from './modules/meal-characteristic/meal-cha
 import { AiMealGeneratorModule } from './modules/ai-meal-generator/ai-meal-generator.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { StripeModule } from './modules/stripe/stripe.module';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { StripeModule } from './modules/stripe/stripe.module';
     MealCharacteristicModule,
     AiMealGeneratorModule,
     SubscriptionsModule,
+    HealthModule,
   ],
 })
 export class AppModule {}
