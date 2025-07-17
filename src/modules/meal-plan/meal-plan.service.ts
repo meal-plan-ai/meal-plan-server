@@ -103,4 +103,81 @@ export class MealPlanService {
 
     return generatedPlan;
   }
+
+  // Security helper methods
+  async findOneByIdAndUser(id: string, userId: string): Promise<MealPlan> {
+    if (!isUUID(id)) {
+      throw new NotFoundException(`Meal plan with ID ${id} not found`);
+    }
+
+    const mealPlan = await this.mealPlanRepository.findOne({
+      where: { id, userId },
+      relations: ['mealCharacteristic'],
+    });
+
+    if (!mealPlan) {
+      throw new NotFoundException(
+        `Meal plan with ID ${id} not found or you don't have permission to access it`,
+      );
+    }
+
+    return mealPlan;
+  }
+
+  async updateByUserOwnership(
+    updateMealPlanDto: UpdateMealPlanDto,
+    userId: string,
+  ): Promise<IMealPlan> {
+    const { id, ...updateData } = updateMealPlanDto;
+
+    const mealPlan = await this.findOneByIdAndUser(id, userId);
+
+    // Update and return the entity
+    const updatedMealPlan = this.mealPlanRepository.merge(mealPlan, updateData);
+
+    return this.mealPlanRepository.save(updatedMealPlan);
+  }
+
+  async removeByUserOwnership(
+    id: string,
+    userId: string,
+  ): Promise<DeleteResult['affected'] | undefined> {
+    if (!isUUID(id)) {
+      throw new NotFoundException(`Meal plan with ID ${id} not found`);
+    }
+
+    // First check if the meal plan exists and belongs to user
+    await this.findOneByIdAndUser(id, userId);
+
+    const result = await this.mealPlanRepository.delete({ id, userId });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(
+        `Meal plan with ID ${id} not found or you don't have permission to delete it`,
+      );
+    }
+
+    return result.affected;
+  }
+
+  async generateAiPlanByUserOwnership(
+    id: string,
+    userId: string,
+  ): Promise<AiGeneratedMealPlan> {
+    const plan = await this.mealPlanRepository.findOne({
+      where: { id, userId },
+      relations: ['mealCharacteristic'],
+    });
+
+    if (!plan) {
+      throw new NotFoundException(
+        `Meal plan with ID ${id} not found or you don't have permission to access it`,
+      );
+    }
+
+    const generatedPlan =
+      await this.aiMealGeneratorService.generateMealPlan(plan);
+
+    return generatedPlan;
+  }
 }

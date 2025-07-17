@@ -58,12 +58,14 @@ export class SubscriptionsController {
     return { active };
   }
 
-  @Get('user/:userId')
+  @Get('user/me')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get subscription status for a specific user' })
+  @ApiOperation({ summary: 'Get subscription status for current user' })
   @ApiResponse({ status: 200, description: 'Returns subscription or null' })
-  async getUserSubscription(@Param('userId') userId: string) {
+  async getUserSubscription(@Request() req: RequestWithUser) {
+    // Only allow users to get their own subscription
+    const userId = req.user.id;
     const subscription =
       await this.subscriptionsService.getUserSubscriptionStatus(userId);
     return { subscription };

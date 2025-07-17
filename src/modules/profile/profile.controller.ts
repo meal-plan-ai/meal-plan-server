@@ -76,12 +76,21 @@ export class ProfileController {
   })
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @Patch(':id')
+  @Patch('me')
   async updateProfile(
     @Body() updateProfileDto: UpdateProfileDto,
+    @Req() request: RequestWithUser,
   ): Promise<IProfile> {
     try {
-      return await this.profileService.updateProfile(updateProfileDto);
+      // Ensure user can only update their own profile
+      const userId = request.user.userId || request.user.id;
+      // Remove id from DTO as we'll use userId for security
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id, ...profileUpdateData } = updateProfileDto;
+      return await this.profileService.updateProfileByUserId(
+        userId,
+        profileUpdateData,
+      );
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw error;

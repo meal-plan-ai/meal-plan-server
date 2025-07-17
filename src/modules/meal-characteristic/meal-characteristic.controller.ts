@@ -74,15 +74,25 @@ export class MealCharacteristicController {
     return { data };
   }
 
-  @ApiOperation({ summary: 'Get all meal characteristics' })
+  @ApiOperation({ summary: 'Get all meal characteristics (User only)' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Return all meal characteristics.',
     type: MealCharacteristicsBaseResponseDto,
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized.',
+  })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll(): Promise<IBaseResponse<IMealCharacteristic[]>> {
-    const data = await this.mealCharacteristicService.findAll();
+  async findAll(
+    @Req() request: RequestWithUser,
+  ): Promise<IBaseResponse<IMealCharacteristic[]>> {
+    // For security, return only user's meal characteristics instead of all
+    const userId = request.user.userId || request.user.id;
+    const data = await this.mealCharacteristicService.findAllByUser(userId);
 
     return { data };
   }
@@ -119,12 +129,23 @@ export class MealCharacteristicController {
     status: HttpStatus.NOT_FOUND,
     description: 'Meal characteristic not found.',
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized.',
+  })
   @ApiParam({ name: 'id', description: 'Meal characteristic ID' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(
     @Param('id') id: string,
+    @Req() request: RequestWithUser,
   ): Promise<IBaseResponse<IMealCharacteristic>> {
-    const data = await this.mealCharacteristicService.findOne(id);
+    const userId = request.user.userId || request.user.id;
+    const data = await this.mealCharacteristicService.findOneByIdAndUser(
+      id,
+      userId,
+    );
 
     return { data };
   }
@@ -150,11 +171,14 @@ export class MealCharacteristicController {
   async update(
     @Param('id') id: string,
     @Body() updateMealCharacteristicDto: UpdateMealCharacteristicDto,
+    @Req() request: RequestWithUser,
   ): Promise<IBaseResponse<IMealCharacteristic>> {
     // Ensure ID from URL is used
     updateMealCharacteristicDto.id = id;
-    const data = await this.mealCharacteristicService.update(
+    const userId = request.user.userId || request.user.id;
+    const data = await this.mealCharacteristicService.updateByUserOwnership(
       updateMealCharacteristicDto,
+      userId,
     );
 
     return { data };
@@ -179,8 +203,13 @@ export class MealCharacteristicController {
   @Delete(':id')
   async remove(
     @Param('id') id: string,
+    @Req() request: RequestWithUser,
   ): Promise<IBaseResponse<number | null | undefined>> {
-    const data = await this.mealCharacteristicService.remove(id);
+    const userId = request.user.userId || request.user.id;
+    const data = await this.mealCharacteristicService.removeByUserOwnership(
+      id,
+      userId,
+    );
     return { data };
   }
 }

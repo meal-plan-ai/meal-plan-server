@@ -76,15 +76,25 @@ export class MealPlanController {
     return { data };
   }
 
-  @ApiOperation({ summary: 'Get all meal plans' })
+  @ApiOperation({ summary: 'Get all meal plans (Admin only)' })
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Return all meal plans.',
     type: MealPlansBaseResponseDto,
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized.',
+  })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll(): Promise<IBaseResponse<IMealPlan[]>> {
-    const data = await this.mealPlanService.findAll();
+  async findAll(
+    @Req() request: RequestWithUser,
+  ): Promise<IBaseResponse<IMealPlan[]>> {
+    // For security, return only user's meal plans instead of all meal plans
+    const userId = request.user.userId || request.user.id;
+    const data = await this.mealPlanService.findAllByUser(userId);
 
     return { data };
   }
@@ -121,10 +131,20 @@ export class MealPlanController {
     status: HttpStatus.NOT_FOUND,
     description: 'Meal plan not found.',
   })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: 'Unauthorized.',
+  })
   @ApiParam({ name: 'id', description: 'Meal plan ID' })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<IBaseResponse<IMealPlan>> {
-    const data = await this.mealPlanService.findOne(id);
+  async findOne(
+    @Param('id') id: string,
+    @Req() request: RequestWithUser,
+  ): Promise<IBaseResponse<IMealPlan>> {
+    const userId = request.user.userId || request.user.id;
+    const data = await this.mealPlanService.findOneByIdAndUser(id, userId);
 
     return { data };
   }
@@ -150,10 +170,15 @@ export class MealPlanController {
   async update(
     @Param('id') id: string,
     @Body() updateMealPlanDto: UpdateMealPlanDto,
+    @Req() request: RequestWithUser,
   ): Promise<IBaseResponse<IMealPlan>> {
     // Ensure ID from URL is used
     updateMealPlanDto.id = id;
-    const data = await this.mealPlanService.update(updateMealPlanDto);
+    const userId = request.user.userId || request.user.id;
+    const data = await this.mealPlanService.updateByUserOwnership(
+      updateMealPlanDto,
+      userId,
+    );
 
     return { data };
   }
@@ -177,8 +202,10 @@ export class MealPlanController {
   @Delete(':id')
   async remove(
     @Param('id') id: string,
+    @Req() request: RequestWithUser,
   ): Promise<IBaseResponse<number | null | undefined>> {
-    const data = await this.mealPlanService.remove(id);
+    const userId = request.user.userId || request.user.id;
+    const data = await this.mealPlanService.removeByUserOwnership(id, userId);
     return { data };
   }
 
@@ -203,9 +230,14 @@ export class MealPlanController {
   @Post(':id/generate-ai-plan')
   async generateAiPlan(
     @Param('id') id: string,
+    @Req() request: RequestWithUser,
   ): Promise<IBaseResponse<AiGeneratedMealPlan>> {
     try {
-      const data = await this.mealPlanService.generateAiPlan(id);
+      const userId = request.user.userId || request.user.id;
+      const data = await this.mealPlanService.generateAiPlanByUserOwnership(
+        id,
+        userId,
+      );
       return { data };
     } catch (error) {
       console.error('Failed to generate AI plan:', error.message);

@@ -50,4 +50,22 @@ export class ProfileService {
     this.profileRepository.merge(profile, updateProfileDto);
     return this.profileRepository.save(profile);
   }
+
+  async updateProfileByUserId(
+    userId: string,
+    updateProfileDto: Omit<UpdateProfileDto, 'id'>,
+  ): Promise<Profile> {
+    const profile = await this.profileRepository.findOne({
+      where: { userId },
+    });
+
+    if (!profile) {
+      throw new NotFoundException(
+        `Profile for user with ID ${userId} not found`,
+      );
+    }
+
+    this.profileRepository.merge(profile, updateProfileDto);
+    return this.profileRepository.save(profile);
+  }
 }
