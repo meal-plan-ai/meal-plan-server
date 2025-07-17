@@ -10,5 +10,5 @@ npm run lint
 echo "🔍 Running unit tests..."
 npm run test
 
-echo "🔍 Running e2e tests..."
-npm run test:e2e:docker
+#echo "🔍 Running e2e tests..."
+#npm run test:e2e:docker

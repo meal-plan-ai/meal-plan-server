@@ -65,9 +65,11 @@ export const StripeProvider: Provider = {
     }
 
     const apiKey = process.env.NEXT_PUBLIC_STRIPE_SK_TEST;
-    console.log('apiKey111', apiKey);
+    console.log('NEXT_PUBLIC_STRIPE_SK_TEST', apiKey);
     if (!apiKey) {
-      throw new Error('STRIPE_SK_TEST environment variable not set');
+      throw new Error(
+        'NEXT_PUBLIC_STRIPE_SK_TEST environment variable not set',
+      );
     }
 
     return new Stripe(apiKey, {
