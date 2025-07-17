@@ -84,30 +84,30 @@ export class StripeService {
     }
   }
 
-  async createSubscription(
-    stripeCustomerId: string,
-    stripePriceId: string,
-    trialDays = 0,
-  ) {
-    try {
-      const subscription = await this.stripe.subscriptions.create({
-        customer: stripeCustomerId,
-        items: [{ price: stripePriceId }],
-        trial_period_days: trialDays,
-      });
-
-      return {
-        subscriptionId: subscription.id,
-        status: subscription.status,
-        currentPeriodEnd: new Date(
-          (subscription as any).current_period_end * 1000,
-        ),
-      };
-    } catch (error) {
-      this.logger.error(`Error creating Stripe subscription: ${error.message}`);
-      throw error;
-    }
-  }
+  // async createSubscription(
+  //   stripeCustomerId: string,
+  //   stripePriceId: string,
+  //   trialDays = 0,
+  // ) {
+  //   try {
+  //     const subscription = await this.stripe.subscriptions.create({
+  //       customer: stripeCustomerId,
+  //       items: [{ price: stripePriceId }],
+  //       trial_period_days: trialDays,
+  //     });
+  //
+  //     return {
+  //       subscriptionId: subscription.id,
+  //       status: subscription.status,
+  //       currentPeriodEnd: new Date(
+  //         (subscription as any).current_period_end * 1000,
+  //       ),
+  //     };
+  //   } catch (error) {
+  //     this.logger.error(`Error creating Stripe subscription: ${error.message}`);
+  //     throw error;
+  //   }
+  // }
 
   async cancelSubscription(stripeSubscriptionId: string) {
     try {

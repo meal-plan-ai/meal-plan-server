@@ -22,8 +22,12 @@ async function bootstrap() {
   app.use(
     json({
       limit: '10mb',
-      verify: (req: any, res, buffer) => {
+      verify: (req: unknown, res, buffer) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         if (req.originalUrl.includes('/webhooks/stripe')) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           req.rawBody = buffer;
         }
         return true;
