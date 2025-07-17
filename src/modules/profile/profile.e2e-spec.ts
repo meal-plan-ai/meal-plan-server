@@ -81,16 +81,15 @@ describe('ProfileController (e2e)', () => {
     });
   });
 
-  describe('PATCH /profile/:id', () => {
+  describe('PATCH /profile/me', () => {
     it('should update the current user profile', async () => {
       const updateData = {
-        id: user.profileId,
         firstName: 'Updated',
         lastName: 'Profile',
       };
 
       await httpRequest
-        .patch(`/profile/${user.profileId}`)
+        .patch('/profile/me')
         .set('Cookie', `token=${authToken}`)
         .send(updateData)
         .expect(200);
@@ -103,6 +102,13 @@ describe('ProfileController (e2e)', () => {
       expect(getResponse.body).toHaveProperty('userId', user.id);
       expect(getResponse.body).toHaveProperty('firstName', 'Updated');
       expect(getResponse.body).toHaveProperty('lastName', 'Profile');
+    });
+
+    it('should return 401 if not authenticated', async () => {
+      await httpRequest
+        .patch('/profile/me')
+        .send({ firstName: 'Test' })
+        .expect(401);
     });
   });
 });

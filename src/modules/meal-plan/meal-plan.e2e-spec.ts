@@ -96,10 +96,10 @@ describe('MealPlanController (e2e)', () => {
   });
 
   describe('GET /meal-plans', () => {
-    it('should return all meal plans', async () => {
+    it('should return user meal plans only (requires authentication)', async () => {
       // First create a meal plan
       const createDto = {
-        name: 'Public Weight Loss Plan',
+        name: 'My Weight Loss Plan',
         durationInDays: 14,
       };
 
@@ -108,12 +108,20 @@ describe('MealPlanController (e2e)', () => {
         .set('Cookie', `token=${authToken}`)
         .send(createDto);
 
-      const response = await httpRequest.get('/meal-plans').expect(200);
+      const response = await httpRequest
+        .get('/meal-plans')
+        .set('Cookie', `token=${authToken}`)
+        .expect(200);
 
       expect(response.body).toHaveProperty('data');
       expect(Array.isArray(response.body.data)).toBe(true);
       expect(response.body.data.length).toBeGreaterThan(0);
       expect(response.body.data[0]).toHaveProperty('name');
+      expect(response.body.data[0]).toHaveProperty('userId', user.id);
+    });
+
+    it('should return 401 if not authenticated', async () => {
+      await httpRequest.get('/meal-plans').expect(401);
     });
   });
 
@@ -147,7 +155,7 @@ describe('MealPlanController (e2e)', () => {
   });
 
   describe('GET /meal-plans/:id', () => {
-    it('should return a meal plan by ID', async () => {
+    it('should return a meal plan by ID (owner only)', async () => {
       // First create a meal plan
       const createDto = {
         name: 'Weight Loss Plan for GET test',
@@ -161,7 +169,10 @@ describe('MealPlanController (e2e)', () => {
 
       const id = createResponse.body.data.id as string;
 
-      const response = await httpRequest.get(`/meal-plans/${id}`).expect(200);
+      const response = await httpRequest
+        .get(`/meal-plans/${id}`)
+        .set('Cookie', `token=${authToken}`)
+        .expect(200);
 
       expect(response.body).toHaveProperty('data');
       expect(response.body.data).toHaveProperty('id', id);
@@ -169,10 +180,18 @@ describe('MealPlanController (e2e)', () => {
         'name',
         'Weight Loss Plan for GET test',
       );
+      expect(response.body.data).toHaveProperty('userId', user.id);
+    });
+
+    it('should return 401 if not authenticated', async () => {
+      await httpRequest.get(`/meal-plans/${nonExistentId}`).expect(401);
     });
 
     it('should return 404 for non-existent ID', async () => {
-      await httpRequest.get(`/meal-plans/${nonExistentId}`).expect(404);
+      await httpRequest
+        .get(`/meal-plans/${nonExistentId}`)
+        .set('Cookie', `token=${authToken}`)
+        .expect(404);
     });
   });
 
@@ -203,7 +222,10 @@ describe('MealPlanController (e2e)', () => {
         .expect(200);
 
       // Verify the update
-      const response = await httpRequest.get(`/meal-plans/${id}`).expect(200);
+      const response = await httpRequest
+        .get(`/meal-plans/${id}`)
+        .set('Cookie', `token=${authToken}`)
+        .expect(200);
 
       expect(response.body).toHaveProperty('data');
       expect(response.body.data).toHaveProperty(
@@ -251,7 +273,10 @@ describe('MealPlanController (e2e)', () => {
         .expect(200);
 
       // Verify it's deleted
-      await httpRequest.get(`/meal-plans/${id}`).expect(404);
+      await httpRequest
+        .get(`/meal-plans/${id}`)
+        .set('Cookie', `token=${authToken}`)
+        .expect(404);
     });
 
     it('should return 401 if not authenticated', async () => {

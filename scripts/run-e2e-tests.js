@@ -6,6 +6,35 @@ const process = require('process');
 // Set test environment
 process.env.NODE_ENV = 'test';
 
+// Set required environment variables for tests
+if (!process.env.NEXT_PUBLIC_STRIPE_SK_TEST) {
+  process.env.NEXT_PUBLIC_STRIPE_SK_TEST = 'sk_test_mock_key_for_testing';
+}
+if (!process.env.STRIPE_SECRET_KEY) {
+  process.env.STRIPE_SECRET_KEY = 'sk_test_mock_key_for_testing';
+}
+if (!process.env.STRIPE_PUBLISHABLE_KEY) {
+  process.env.STRIPE_PUBLISHABLE_KEY = 'pk_test_mock_key_for_testing';
+}
+if (!process.env.STRIPE_WEBHOOK_SECRET) {
+  process.env.STRIPE_WEBHOOK_SECRET = 'whsec_test_mock_webhook_secret';
+}
+if (!process.env.JWT_SECRET) {
+  process.env.JWT_SECRET = 'test_jwt_secret_key_for_development_only';
+}
+if (!process.env.JWT_EXPIRATION) {
+  process.env.JWT_EXPIRATION = '86400'; // 24 hours in seconds
+}
+if (!process.env.OPENAI_API_KEY) {
+  process.env.OPENAI_API_KEY = 'sk-test-mock-openai-key-for-testing';
+}
+if (!process.env.FRONTEND_URL) {
+  process.env.FRONTEND_URL = 'http://localhost:3000';
+}
+if (!process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = 'postgresql://postgres:postgres@localhost:5433/meal_plan_test';
+}
+
 console.log(`📊 Using test environment (NODE_ENV=${process.env.NODE_ENV})`);
 
 // Helper function to run npm commands
