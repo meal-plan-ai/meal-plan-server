@@ -6,8 +6,10 @@ import {
   IsUUID,
   Min,
   IsDate,
+  IsEnum,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { AiGenerationStatus } from '../entities/meal-plan.entity';
 
 export class CreateMealPlanDto {
   @ApiProperty({
@@ -122,6 +124,16 @@ export class MealPlanResponseDto {
   @IsUUID()
   @IsOptional()
   userId?: string;
+
+  @ApiProperty({
+    description: 'AI generation status',
+    enum: AiGenerationStatus,
+    example: AiGenerationStatus.IDLE,
+    required: false,
+  })
+  @IsOptional()
+  @IsEnum(AiGenerationStatus)
+  aiGenerationStatus?: AiGenerationStatus;
 
   @ApiProperty({
     description: 'Creation timestamp',
