@@ -12,12 +12,15 @@ import {
 } from './dto/meal-characteristic.dto';
 import { IMealCharacteristic } from './entities/meal-characteristic.interface';
 import { isUUID } from 'class-validator';
+import { MealPlan } from '../meal-plan/entities/meal-plan.entity';
 
 @Injectable()
 export class MealCharacteristicService {
   constructor(
     @InjectRepository(MealCharacteristic)
     private mealCharacteristicRepository: Repository<MealCharacteristic>,
+    @InjectRepository(MealPlan)
+    private mealPlanRepository: Repository<MealPlan>,
   ) {}
 
   async create(
@@ -102,6 +105,22 @@ export class MealCharacteristicService {
     return result.affected;
   }
 
+  // Helper method to check for related meal plans by user
+  private async checkForRelatedMealPlansByUser(
+    mealCharacteristicId: string,
+    userId: string,
+  ): Promise<void> {
+    const relatedMealPlans = await this.mealPlanRepository.find({
+      where: { mealCharacteristicId, userId },
+    });
+
+    if (relatedMealPlans.length > 0) {
+      throw new ConflictException(
+        `Cannot delete meal characteristic. It is currently being used by ${relatedMealPlans.length} of your meal plan(s). Please delete those meal plans first or update them to use a different characteristic.`,
+      );
+    }
+  }
+
   // Security helper methods
   async findOneByIdAndUser(
     id: string,
@@ -155,6 +174,8 @@ export class MealCharacteristicService {
 
     // First check if the meal characteristic exists and belongs to user
     await this.findOneByIdAndUser(id, userId);
+
+    await this.checkForRelatedMealPlansByUser(id, userId);
 
     const result = await this.mealCharacteristicRepository.delete({
       id,
