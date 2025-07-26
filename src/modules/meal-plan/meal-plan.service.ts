@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
-import { MealPlan } from './entities/meal-plan.entity';
+import { MealPlan, AiGenerationStatus } from './entities/meal-plan.entity';
 import { CreateMealPlanDto, UpdateMealPlanDto } from './dto/meal-plan.dto';
 import { IMealPlan } from './entities/meal-plan.interface';
 import { isUUID } from 'class-validator';
@@ -175,9 +175,34 @@ export class MealPlanService {
       );
     }
 
-    const generatedPlan =
-      await this.aiMealGeneratorService.generateMealPlan(plan);
+    // Check if generation is already in progress
+    if (plan.aiGenerationStatus === AiGenerationStatus.IN_PROGRESS) {
+      throw new ConflictException(
+        'AI meal plan generation is already in progress for this meal plan',
+      );
+    }
 
-    return generatedPlan;
+    // Set status to in_progress before starting generation
+    await this.mealPlanRepository.update(id, {
+      aiGenerationStatus: AiGenerationStatus.IN_PROGRESS,
+    });
+
+    try {
+      const generatedPlan =
+        await this.aiMealGeneratorService.generateMealPlan(plan);
+
+      // Set status to completed after successful generation
+      await this.mealPlanRepository.update(id, {
+        aiGenerationStatus: AiGenerationStatus.COMPLETED,
+      });
+
+      return generatedPlan;
+    } catch (error) {
+      // Set status to failed if generation fails
+      await this.mealPlanRepository.update(id, {
+        aiGenerationStatus: AiGenerationStatus.FAILED,
+      });
+      throw error;
+    }
   }
 }
